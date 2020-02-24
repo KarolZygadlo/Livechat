@@ -6,7 +6,7 @@ export default class Message extends Component {
         return (
             <div className="message">
                 <span className="message__author">
-                    {this.props.message.userName}:
+                    {this.props.message.username}:
                 </span>
             {this.props.message.message}
             </div>

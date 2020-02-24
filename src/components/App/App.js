@@ -37,21 +37,30 @@ class App extends Component {
               className="app__button"
               onClick={this.handleSignIn.bind(this)}
             >
-              Sign in
+              Zaloguj się
             </button>
           ) : (
             <button
               className="app__button"
               onClick={this.handleLogOut.bind(this)}
             >
-              Logout
+              Wyloguj
             </button>
           )}
         </div>
+        { !this.state.user ? (
         <div className="app__list">
-          <Form user={this.state.user} />
+          <span>Aby zobaczyć chat musisz się zalogować</span>
+         
         </div>
+         ) : (
+        <div className="app__list">
+           <Form user={this.state.user} />
+          
+        </div>
+        )}
       </div>
+      
     );
   }
 }

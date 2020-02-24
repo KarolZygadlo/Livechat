@@ -1,10 +1,10 @@
 export default {
-    apiKey: "AIzaSyDosJldyApBaOujAMomDTwXssfeCKFE0EM",
-    authDomain: "chatappreact-c3c4e.firebaseapp.com",
-    databaseURL: "https://chatappreact-c3c4e.firebaseio.com",
-    projectId: "chatappreact-c3c4e",
-    storageBucket: "chatappreact-c3c4e.appspot.com",
-    messagingSenderId: "936326076471",
-    appId: "1:936326076471:web:2bb8cf36ad07ab2b8bc7b2",
-    measurementId: "G-SSZVGX5Q50"
+  apiKey: "AIzaSyB_BieaFnGW5xYnjx7LcmN7ep0X0Aygw5I",
+  authDomain: "mobileapp-f2771.firebaseapp.com",
+  databaseURL: "https://mobileapp-f2771.firebaseio.com/",
+  projectId: "mobileapp-f2771",
+  storageBucket: "mobileapp-f2771.appspot.com",
+  messagingSenderId: "84708648430",
+  appId: "1:84708648430:web:64d6d40f8f85a0ce715aff",
+  measurementId: "G-TBGBE9172Q"
   };

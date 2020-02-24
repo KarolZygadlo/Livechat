@@ -6,16 +6,16 @@ export default class Form extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      userName: 'Karol',
+      username: 'Karol',
       message: '',
       list: [],
     };
-    this.messageRef = firebase.database().ref().child('messages');
+    this.messageRef = firebase.database().ref().child('chat');
     this.listenMessages();
   }
   componentWillReceiveProps(nextProps) {
     if(nextProps.user) {
-      this.setState({'userName': nextProps.user.displayName});
+      this.setState({'username': nextProps.user.displayName});
     }
   }
   handleChange(event) {
@@ -24,7 +24,7 @@ export default class Form extends Component {
   handleSend() {
     if (this.state.message) {
       var newItem = {
-        userName: this.state.userName,
+        username: this.state.username,
         message: this.state.message,
       }
       this.messageRef.push(newItem);
@@ -56,7 +56,7 @@ export default class Form extends Component {
           <input
             className="form__input"
             type="text"
-            placeholder="Type message"
+            placeholder="Aa"
             value={this.state.message}
             onChange={this.handleChange.bind(this)}
             onKeyPress={this.handleKeyPress.bind(this)}
@@ -65,7 +65,7 @@ export default class Form extends Component {
             className="form__button"
             onClick={this.handleSend.bind(this)}
           >
-            send
+            Wyślij
           </button>
         </div>
       </div>
