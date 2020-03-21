@@ -2,9 +2,7 @@ import React, { Component } from 'react';
 import logo from '../../images/logo.svg';
 import './App.css';
 import Form from '../Form/Form.js';
-import firebase from 'firebase';
-import firebaseConfig from '../../config';
-firebase.initializeApp(firebaseConfig);
+import {myFirebase, myFirestore} from '../../config'
 class App extends Component {
   constructor(props) {
     super(props);
@@ -13,16 +11,16 @@ class App extends Component {
     }
   }
   componentDidMount() {
-    firebase.auth().onAuthStateChanged(user => {
+    myFirebase.auth().onAuthStateChanged(user => {
       this.setState({ user });
     });
   }
   handleSignIn() {
-    const provider = new firebase.auth.GoogleAuthProvider();
-    firebase.auth().signInWithPopup(provider);
+    const provider = new myFirebase.auth.GoogleAuthProvider();
+    myFirebase.auth().signInWithPopup(provider);
   }
   handleLogOut() {
-    firebase.auth().signOut();
+    myFirebase.auth().signOut();
   }
   render() {
     return (

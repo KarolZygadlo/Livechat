@@ -27,7 +27,7 @@ export default class Form extends Component {
         username: this.state.username,
         message: this.state.message,
       }
-      this.messageRef.push(newItem);
+      this.messageRef.add(newItem);
       this.setState({ message: '' });
     }
   }
