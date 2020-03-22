@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import './Form.css';
 import Message from '../Message/Message';
 import firebase from 'firebase';
+import {myFirebase, myFirestore} from '../../config'
+var db = firebase.firestore();
 export default class Form extends Component {
   constructor(props) {
     super(props);
@@ -10,7 +12,7 @@ export default class Form extends Component {
       message: '',
       list: [],
     };
-    this.messageRef = firebase.database().ref().child('chat');
+    this.messageRef = firebase.firestore().collection('messages')
     this.listenMessages();
   }
   componentWillReceiveProps(nextProps) {
@@ -37,12 +39,16 @@ export default class Form extends Component {
   }
   listenMessages() {
     this.messageRef
-      .limitToLast(10)
-      .on('value', message => {
-        this.setState({
-          list: Object.values(message.val()),
-        });
+    .onSnapshot((querySnapshot)=>{
+      let allMessages=[];
+      querySnapshot.forEach(doc=>{
+        allMessages.push(doc.data())
+      })
+      this.setState({
+        list: allMessages
       });
+    })
+
   }
   render() {
     return (
