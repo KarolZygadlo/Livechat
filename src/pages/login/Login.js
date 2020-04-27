@@ -51,7 +51,7 @@ export default class Login extends React.Component {
         event.preventDefault();
         this.setState({error:""});
 
-        await firebase.auth().signInWithEmailAndPassword(this.state.email, md5(this.state.password))
+        await firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
         .then(async result => {
             let user = result.user;
             if(user) {
