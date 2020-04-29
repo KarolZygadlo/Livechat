@@ -2,7 +2,7 @@ import React from 'react';
 import LoginString from "../login/LoginStrings";
 import firebase from '../../services/firebase';
 import './Chat.css';
-import ReactLoading from 'react-loading';
+import ReactDOM from 'react-dom';
 
 export default class Chat extends React.Component {
 
@@ -69,7 +69,7 @@ export default class Chat extends React.Component {
                     id: item.data().id,
                     nickname: item.data().nickname,
                     messages: item.data().messages,
-                    photoUrl: item.data().URL,
+                    photoUrl: item.data().photoURL,
                 })
             })
             this.setState({
@@ -142,14 +142,17 @@ export default class Chat extends React.Component {
                         className = {classname}
                         onClick = {()=>{
                             this.notificationErase(item.id)
-                            this.setState({currentPeerUser: item})
-                            document.getElementById(item.key).style.backgroundColor = '#fff'
-                            document.getElementById(item.key).style.color = '#fff'
+                            this.setState({currentPeerUser: item,
+                            displayedContactSwitchedNotification: this.notificationMessagesErase})
+                            document.getElementById(item.key).style.backgroundColor = "#fff"
+                            if (document.getElementById(item.key)){
+                                document.getElementById(item.key).style.color = '#fff'
+                            }
                         }}
                         >
                             <img
                             className = "viewAvatarItem"
-                            src = {item.URL}
+                            src = {item.photoUrl}
                             alt = ""
                             />
                             <div className="viewWrapContentItem">
@@ -167,10 +170,69 @@ export default class Chat extends React.Component {
             })
             this.setState({
                 displayedContacts: viewListUser
-            })
+            });
         }else{
             console.log("No users in list")
         }
+    }
+
+    searchHandler =(event)=>{
+        let searchQuery = event.target.value.toLowerCase(),
+        displayedContacts = this.searchUsers.filter((el)=>{
+            let SearchValue = el.nickname.toLowerCase();
+            return SearchValue.indexOf(searchQuery) !== -1;
+        })
+        console.log(displayedContacts)
+        this.displayedContacts = displayedContacts
+        this.displaySearchedContact()
+    }
+
+    displaySearchedContact=()=>{
+        if(this.searchUsers.length > 0){
+            let viewListUser = []
+            let classname = ""
+            this.displayedContacts.map((item)=>{
+                if(item.id != this.currentUserId) {
+                    classname = this.getClassnameforUserandNotification(item.id)
+                    viewListUser.push(
+                        <button
+                        id={item.key}
+                        className = {classname}
+                        onClick = {()=>{
+                            this.notificationErase(item.id)
+                            this.setState({currentPeerUser: item,
+                            displayedContactSwitchedNotification: this.notificationMessagesErase})
+                            document.getElementById(item.key).style.backgroundColor = "#fff"
+                            if (document.getElementById(item.key)){
+                                document.getElementById(item.key).style.color = '#fff'
+                            }
+                        }}
+                        >
+                            <img
+                            className = "viewAvatarItem"
+                            src = {item.photoUrl}
+                            alt = ""
+                            />
+                            <div className="viewWrapContentItem">
+                                <span className="textItem">
+                                    {item.nickname}
+                                </span>
+                            </div>
+                            {classname === 'viewWrapItemNotification' ?
+                            <div className="notificationparagraph">
+                            <p id={item.key} className="newmessages">New messages</p>
+                            </div>:null}
+                        </button>
+                    ) 
+                }
+            })
+            this.setState({
+                displayedContacts: viewListUser
+            });
+        }else{
+            console.log("No users in list")
+        }
+
     }
 
     render() {
@@ -185,7 +247,18 @@ export default class Chat extends React.Component {
                                src={this.currentUserPhoto}
                                onClick={this.onProfileClick}
                             />
+                            <span>{this.currentUserName}</span>
                             <button className="Logout" onClick = {this.logout}>Logout</button>
+                        </div>
+                        <div className="rootsearchbar">
+                            <div className="input-container">
+                                <i class="fa fa-search icon"></i>
+                                <input class="input-field"
+                                type="text"
+                                onChange={this.searchHandler}
+                                placeholder="Search"
+                                />
+                            </div>
                         </div>
                         {this.state.displayedContacts}
                     </div>

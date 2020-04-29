@@ -80,23 +80,21 @@ export default class Profile extends React.Component{
             }
         }else{
             newinfo={
-                nickname: this.state.nickname,
+                nickname: this.state.nickname
             }
-            firebase.firestore().collection('users')
-            .doc(this.state.documentKey)
-            .update(newinfo)
-            .then(data =>{
-                localStorage.setItem(LoginString.Nickname, this.state.nickname)
-                if(isUpdatedPhotoURL){
-                    localStorage.setItem(LoginString.PhotoUrl, downloadURL)
-                }
-                this.setState({isLoading: false})
-                this.props.showToast(1, 'Update info success')
-            })
         }
-
+        firebase.firestore().collection('users')
+        .doc(this.state.documentKey)
+        .update(newinfo)
+        .then(() =>{
+            localStorage.setItem(LoginString.Nickname, this.state.nickname)
+            if(isUpdatedPhotoURL){
+            localStorage.setItem(LoginString.PhotoUrl, downloadURL)
+            }
+            this.setState({isLoading: false})
+            this.props.showToast(1, 'Update info success')
+        })
     }
-
 
     render() {
         return(
