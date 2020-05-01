@@ -3,6 +3,8 @@ import LoginString from "../login/LoginStrings";
 import firebase from '../../services/firebase';
 import './Chat.css';
 import ReactDOM from 'react-dom';
+import Message from '../message/Message';
+import Welcome from '../welcome/Welcome';
 
 export default class Chat extends React.Component {
 
@@ -22,12 +24,13 @@ export default class Chat extends React.Component {
 
         this.currentUserMessages=[]
         this.searchUsers = []
-        this.notificationErase = []
+        this.notificationMessagesErase = []
 
         this.onProfileClick = this.onProfileClick.bind(this);
         this.getListUser = this.getListUser.bind(this);
         this.renderListUser = this.renderListUser.bind(this);
         this.updaterenderList = this.updaterenderList.bind(this);
+        this.notificationErase = this.notificationErase.bind(this);
         this.getClassnameforUserandNotification = this.getClassnameforUserandNotification.bind(this);
     }
 
@@ -104,7 +107,7 @@ export default class Chat extends React.Component {
             return className
     }
 
-    notificationErase = (itemId)=>{
+    notificationErase =(itemId)=>{
         this.state.displayedContactSwitchedNotification.forEach((el)=>{
             if(el.notificationId.length > 0){
                 if(el.notificationId != itemId){
@@ -199,7 +202,7 @@ export default class Chat extends React.Component {
                         id={item.key}
                         className = {classname}
                         onClick = {()=>{
-                            this.notificationErase(item.id)
+                            this.notificationErase(item.id).
                             this.setState({currentPeerUser: item,
                             displayedContactSwitchedNotification: this.notificationMessagesErase})
                             document.getElementById(item.key).style.backgroundColor = "#fff"
@@ -261,6 +264,17 @@ export default class Chat extends React.Component {
                             </div>
                         </div>
                         {this.state.displayedContacts}
+                    </div>
+                    <div className="viewBoard">
+                        {this.state.currentPeerUser ? (
+                            <Message
+                            currentPeerUser ={this.state.currentPeerUser}
+                            showToast={this.props.showToast}
+                            />):(
+                            <Welcome 
+                            currentUserName={this.currentUserName}
+                            currentUserPhoto={this.currentUserPhoto}/> 
+                            )}
                     </div>
                 </div>
                 
