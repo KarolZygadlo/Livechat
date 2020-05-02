@@ -12,26 +12,32 @@ export default class Chat extends React.Component {
         super(props)
         this.state ={
             isLoading: true,
-            isOpenDialogConfirmLogout: false,
             currentPeerUser: null,
-            displayedContactSwitchedNotification:[],
-            displayedContacts: []
         }
-        this.currentUserName = localStorage.getItem(LoginString.Nickname);
+        this.currentUserName = localStorage.getItem(LoginString.NICKNAME);
         this.currentUserId = localStorage.getItem(LoginString.ID);
-        this.currentUserPhoto = localStorage.getItem(LoginString.PhotoURL); 
-        this.currentUserDocumentId = localStorage.getItem(LoginString.FirebaseDocumentId);
+        this.currentUserPhoto = localStorage.getItem(LoginString.PHOTO_URL); 
 
-        this.currentUserMessages=[]
         this.searchUsers = []
-        this.notificationMessagesErase = []
+        this.allUsers = []
 
         this.onProfileClick = this.onProfileClick.bind(this);
         this.getListUser = this.getListUser.bind(this);
         this.renderListUser = this.renderListUser.bind(this);
-        this.updaterenderList = this.updaterenderList.bind(this);
-        this.notificationErase = this.notificationErase.bind(this);
-        this.getClassnameforUserandNotification = this.getClassnameforUserandNotification.bind(this);
+    }
+
+    componentDidMount () {
+        this.checkLogin()
+    }
+
+    checkLogin = () => {
+        if (!localStorage.getItem(LoginString.ID)) {
+            this.setState({isLoading: false}, () => {
+                this.props.history.push('/')
+            })
+        } else {
+            this.getListUser()
+        }
     }
 
     logout=()=>{
@@ -44,113 +50,39 @@ export default class Chat extends React.Component {
         this.props.history.push('/profile')
     }
 
-    componentDidMount () {
-        firebase.firestore().collection('users').doc(this.currentUserDocumentId).get()
-        .then((doc)=>{
-            doc.data().messages.map((item)=>{
-                this.currentUserMessages.push({
-                    notificationId: item.notificationId,
-                    number: item.number
-                })
-            })
-            this.setState({
-                displayedContactSwitchedNotification: this.currentUserMessages
-            })
-        })
-        this.getListUser()
-    }
-
     getListUser = async()=> {
-        const result = await firebase.firestore().collection('users').get();
-        if(result.docs.length > 0) {
-            let listUsers = []
-            listUsers = [...result.docs]
-            listUsers.forEach((item, index)=>{
-                this.searchUsers.push({
-                    key: index,
-                    documentKey: item.id,
-                    id: item.data().id,
-                    nickname: item.data().nickname,
-                    messages: item.data().messages,
-                    photoUrl: item.data().photoURL,
-                })
-            })
-            this.setState({
-                isLoading: false
-            })
-        }
-        this.renderListUser()
-    }
-
-    getClassnameforUserandNotification = (itemId)=>{
-        let number = 0
-        let className = ""
-        let check = false;
-        if(this.state.currentPeerUser &&
-            this.state.currentPeerUser.id === itemId){
-                className = 'viewWrapItemFocused'
-            }else{
-                this.state.displayedContactSwitchedNotification.forEach((item)=>{
-                    if(item.notificationId.length > 0){
-                        if(item.notificationId === itemId){
-                            check = true
-                            number = item.number
-                        }
-                    }
-                })
-                if(check === true){
-                    className = "viewWrapItemNotification"
-                }else{
-                    className = 'viewWrapItem'
-                }
-            }
-            return className
-    }
-
-    notificationErase =(itemId)=>{
-        this.state.displayedContactSwitchedNotification.forEach((el)=>{
-            if(el.notificationId.length > 0){
-                if(el.notificationId != itemId){
-                    this.notificationMessagesErase.push(
-                        {
-                            notificationId: el.notificationId,
-                            number: el.number
-                        }
-                    )
-                }
-            }
-        })
-        this.updaterenderList()
-    }
-
-    updaterenderList =()=>{
-        firebase.firestore().collection('users').doc(this.currentUserDocumentId).update(
-            {messages: this.notificationMessagesErase}
-        )
-        this.setState({
-            displayedContactSwitchedNotification: this.notificationMessagesErase
-        })
+        this.allUsers.length = 0
+        this.setState({isLoading: true})
+         let newusers = firebase.firestore()
+         .collection('users')
+         .onSnapshot(
+             snapshot => {
+                 snapshot.docChanges().forEach(change => {
+                     if (change.type === LoginString.DOC) {
+                         this.allUsers.push(change.doc.data())
+                     }
+                 })
+                 this.setState({isLoading: false})
+             },
+             err => {
+                 this.props.showToast(0, err.toString())
+             }
+         )
     }
 
     renderListUser=()=>{
-        if(this.searchUsers.length > 0){
+        if(this.allUsers.length > 0){
             let viewListUser = []
             let classname = ""
-            this.searchUsers.map((item)=>{
+            console.log(this.allUsers)
+            this.allUsers.forEach((item)=>{
                 if(item.id != this.currentUserId) {
-                    classname = this.getClassnameforUserandNotification(item.id)
                     viewListUser.push(
                         <button
                         id={item.key}
-                        className = {classname}
+                        className = "viewWrapItem"
                         onClick = {()=>{
-                            this.notificationErase(item.id)
-                            this.setState({currentPeerUser: item,
-                            displayedContactSwitchedNotification: this.notificationMessagesErase})
-                            document.getElementById(item.key).style.backgroundColor = "#fff"
-                            if (document.getElementById(item.key)){
-                                document.getElementById(item.key).style.color = '#fff'
-                            }
+                            this.setState({currentPeerUser: item})
                         }}
                         >
                             <img
@@ -163,80 +95,64 @@ export default class Chat extends React.Component {
                                     {item.nickname}
                                 </span>
                             </div>
-                            {classname === 'viewWrapItemNotification' ?
-                            <div className="notificationparagraph">
-                            <p id={item.key} className="newmessages">New messages</p>
-                            </div>:null}
                         </button>
                     ) 
                 }
             })
-            this.setState({
-                displayedContacts: viewListUser
-            });
+            return viewListUser
         }else{
             console.log("No users in list")
         }
     }
 
-    searchHandler =(event)=>{
-        let searchQuery = event.target.value.toLowerCase(),
-        displayedContacts = this.searchUsers.filter((el)=>{
-            let SearchValue = el.nickname.toLowerCase();
-            return SearchValue.indexOf(searchQuery) !== -1;
-        })
-        console.log(displayedContacts)
-        this.displayedContacts = displayedContacts
-        this.displaySearchedContact()
-    }
+    // searchHandler =(event)=>{
+    //     let searchQuery = event.target.value.toLowerCase(),
+    //     displayedContacts = this.searchUsers.filter((el)=>{
+    //         let SearchValue = el.nickname.toLowerCase();
+    //         return SearchValue.indexOf(searchQuery) !== -1;
+    //     })
+    //     console.log(displayedContacts)
+    //     this.displayedContacts = displayedContacts
+    //     this.displaySearchedContact()
+    // }
 
-    displaySearchedContact=()=>{
-        if(this.searchUsers.length > 0){
-            let viewListUser = []
-            let classname = ""
-            this.displayedContacts.map((item)=>{
-                if(item.id != this.currentUserId) {
-                    classname = this.getClassnameforUserandNotification(item.id)
-                    viewListUser.push(
-                        <button
-                        id={item.key}
-                        className = {classname}
-                        onClick = {()=>{
-                            this.notificationErase(item.id).
-                            this.setState({currentPeerUser: item,
-                            displayedContactSwitchedNotification: this.notificationMessagesErase})
-                            document.getElementById(item.key).style.backgroundColor = "#fff"
-                            if (document.getElementById(item.key)){
-                                document.getElementById(item.key).style.color = '#fff'
-                            }
-                        }}
-                        >
-                            <img
-                            className = "viewAvatarItem"
-                            src = {item.photoUrl}
-                            alt = ""
-                            />
-                            <div className="viewWrapContentItem">
-                                <span className="textItem">
-                                    {item.nickname}
-                                </span>
-                            </div>
-                            {classname === 'viewWrapItemNotification' ?
-                            <div className="notificationparagraph">
-                            <p id={item.key} className="newmessages">New messages</p>
-                            </div>:null}
-                        </button>
-                    ) 
-                }
-            })
-            this.setState({
-                displayedContacts: viewListUser
-            });
-        }else{
-            console.log("No users in list")
-        }
-
-    }
+    // displaySearchedContact=()=>{
+    //     if(this.allUsers.length > 0){
+    //         let viewListUser = []
+    //         let classname = ""
+    //         this.displayedContacts.map((item)=>{
+    //             if(item.id != this.currentUserId) {
+    //                 viewListUser.push(
+    //                     <button
+    //                     id={item.key}
+    //                     className = {classname}
+    //                     onClick = {()=>{
+    //                         this.setState({currentPeerUser: item})
+    //                     }}
+    //                     >
+    //                         <img
+    //                         className = "viewAvatarItem"
+    //                         src = {item.photoUrl}
+    //                         alt = ""
+    //                         />
+    //                         <div className="viewWrapContentItem">
+    //                             <span className="textItem">
+    //                                 {item.nickname}
+    //                             </span>
+    //                         </div>
+    //                         {classname === 'viewWrapItemNotification' ?
+    //                         <div className="notificationparagraph">
+    //                         <p id={item.key} className="newmessages">New messages</p>
+    //                         </div>:null}
+    //                     </button>
+    //                 ) 
+    //             }
+    //         })
+    //         return viewListUser
+    //     }else{
+    //         console.log("No users in list")
+    //     }
+    // }
 
     render() {
         return(
@@ -263,7 +179,7 @@ export default class Chat extends React.Component {
                                 />
                             </div>
                         </div>
-                        {this.state.displayedContacts}
+                        {this.renderListUser()}
                     </div>
                     <div className="viewBoard">
                         {this.state.currentPeerUser ? (

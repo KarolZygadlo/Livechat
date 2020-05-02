@@ -16,10 +16,9 @@ export default class Message extends React.Component {
             isLoading: false,
             inputValue:""
         }
-        this.currentUserName = localStorage.getItem(LoginString.Nickname);
+        this.currentUserName = localStorage.getItem(LoginString.NICKNAME);
         this.currentUserId = localStorage.getItem(LoginString.ID);
-        this.currentUserPhoto = localStorage.getItem(LoginString.PhotoURL); 
-        this.currentUserDocumentId = localStorage.getItem(LoginString.FirebaseDocumentId);
+        this.currentUserPhoto = localStorage.getItem(LoginString.PHOTO_URL); 
         this.stateChanged = localStorage.getItem(LoginString.UPLOAD_CHANGED);
         this.currentPeerUser = this.props.currentPeerUser
         this.groupChatId = null;
@@ -28,10 +27,7 @@ export default class Message extends React.Component {
         this.removeListener= null;
         this.currentPhotoFile = null;
 
-        // firebase.firestore().collection('users').doc(this.currentPeerUser.documentkey).get()
-        // .then((docRef)=>{
-        //     this.currentPeerUserMessages = docRef.data().messages
-        // })
+
         
     }
 
@@ -317,7 +313,6 @@ export default class Message extends React.Component {
                                 </div>
                                 {this.isLastMessageLeft(index) ? (
                                     <span className="textTimeLeft">
-                    {moment(Number(item.timestamp)).format('ll')}
                   </span>
                                 ) : null}
                             </div>
@@ -345,7 +340,6 @@ export default class Message extends React.Component {
                                 </div>
                                 {this.isLastMessageLeft(index) ? (
                                     <span className="textTimeLeft">
-                    {moment(Number(item.timestamp)).format('ll')}
                   </span>
                                 ) : null}
                             </div>
@@ -366,7 +360,6 @@ export default class Message extends React.Component {
                                 </div>
                                 {this.isLastMessageLeft(index) ? (
                                     <span className="textTimeLeft">
-                    {moment(Number(item.timestamp)).format('ll')}
                   </span>
                                 ) : null}
                             </div>

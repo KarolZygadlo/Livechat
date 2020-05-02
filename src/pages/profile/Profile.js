@@ -7,144 +7,146 @@ import images from '../../projectImages/ProjectImages';
 import LoginString from '../login/LoginStrings';
 
 export default class Profile extends React.Component{
-    constructor(props){
-        super(props);
+    constructor(props) {
+        super(props)
         this.state = {
             isLoading: false,
-            documentKey: localStorage.getItem(LoginString.FirebaseDocumentId),
             id: localStorage.getItem(LoginString.ID),
-            nickname: localStorage.getItem(LoginString.Nickname),
-            photoURL: localStorage.getItem(LoginString.PhotoURL),
+            nickname: localStorage.getItem(LoginString.NICKNAME),
+            photoUrl: localStorage.getItem(LoginString.PHOTO_URL)
         }
-        this.newPhoto = null
-        this.newPhotoUrl = ""
+        this.newAvatar = null
+        this.newPhotoUrl = ''
     }
 
-    componentDidMount(){
-        if(!localStorage.getItem(LoginString.ID)){
-            this.props.history.push("/")
+    componentDidMount() {
+        this.checkLogin()
+    }
+
+    checkLogin = () => {
+        if (!localStorage.getItem(LoginString.ID)) {
+            this.props.history.push('/')
         }
     }
 
-    onChangeNickname =(event)=>{
-        this.setState({
-            nickname: event.target.value
-        })
+    onChangeNickname = event => {
+        this.setState({nickname: event.target.value})
     }
 
-    onChangeAvatar =(event)=>{
-        if(event.target.files && event.target.files[0]){
+    onChangeAvatar = event => {
+        if (event.target.files && event.target.files[0]) {
+            // Check this file is an image?
             const prefixFiletype = event.target.files[0].type.toString()
-            if(prefixFiletype.indexOf(LoginString.PREFIX_IMAGE) !== 0){
-                this.props.showToast(0, "This file is not an image")
+            if (prefixFiletype.indexOf(LoginString.PREFIX_IMAGE) !== 0) {
+                this.props.showToast(0, 'This file is not an image')
                 return
             }
-            this.newPhoto = event.target.files[0]
-            this.setState({photoURL: URL.createObjectURL(event.target.files[0])})
-        }else{
-            this.props.showToast(0, "Something went wrong")
+            this.newAvatar = event.target.files[0]
+            this.setState({photoUrl: URL.createObjectURL(event.target.files[0])})
+        } else {
+            this.props.showToast(0, 'Something wrong with input file')
         }
     }
 
-    uploadAvatar =()=>{
+    uploadAvatar = () => {
         this.setState({isLoading: true})
-        if(this.newPhoto){
+        if (this.newAvatar) {
             const uploadTask = firebase.storage()
-            .ref()
-            .child(this.state.id)
-            .put(this.newPhoto)
+                .ref()
+                .child(this.state.id)
+                .put(this.newAvatar)
             uploadTask.on(
                 LoginString.UPLOAD_CHANGED,
                 null,
-                err =>{
-                    console.log('fail')
+                err => {
+                    this.props.showToast(0, err.message)
                 },
-                ()=>{
-                    uploadTask.snapshot.ref.getDownloadURL().then(downloadURL =>{
+                () => {
+                    uploadTask.snapshot.ref.getDownloadURL().then(downloadURL => {
                         this.updateUserInfo(true, downloadURL)
-                        
                     })
                 }
             )
-        }else{
+        } else {
             this.updateUserInfo(false, null)
         }
     }
 
-    updateUserInfo =(isUpdatedPhotoURL, downloadURL)=>{
-        let newinfo
-        if(isUpdatedPhotoURL){
-            newinfo={
+    updateUserInfo = (isUpdatePhotoUrl, downloadURL) => {
+        let newInfo
+        if (isUpdatePhotoUrl) {
+            newInfo = {
                 nickname: this.state.nickname,
-                photoURL: downloadURL
+                photoUrl: downloadURL
             }
-        }else{
-            newinfo={
+        } else {
+            newInfo = {
                 nickname: this.state.nickname
             }
         }
-        firebase.firestore().collection('users')
-        .doc(this.state.documentKey)
-        .update(newinfo)
-        .then(() =>{
-            localStorage.setItem(LoginString.Nickname, this.state.nickname)
-            if(isUpdatedPhotoURL){
-            localStorage.setItem(LoginString.PhotoUrl, downloadURL)
-            }
-            this.setState({isLoading: false})
-            this.props.showToast(1, 'Update info success')
-        })
+        firebase.firestore()
+            .collection('users')
+            .doc(this.state.id)
+            .update(newInfo)
+            .then(data => {
+                localStorage.setItem(LoginString.NICKNAME, this.state.nickname)
+                if (isUpdatePhotoUrl) {
+                    localStorage.setItem(LoginString.PHOTO_URL, downloadURL)
+                }
+                this.setState({isLoading: false})
+                this.props.showToast(1, 'Update info success')
+            })
     }
 
     render() {
-        return(
-            <div className="profileroot">
-                <div className="headerprofile">
+        return (
+            <div className="root">
+                <div className="header">
                     <span>PROFILE</span>
                 </div>
-                <img className="avatar" alt="" src={this.state.photoURL}/>
+
+                <img className="avatar" alt="Avatar" src={this.state.photoUrl}/>
+
                 <div className="viewWrapInputFile">
                     <img
                         className="imgInputFile"
-                        alt=""
+                        alt="icon gallery"
                         src={images.choosefile}
-                        onClick = {()=>{this.refInput.click()}}
+                        onClick={() => this.refInput.click()}
                     />
                     <input
-                    ref = {el =>{
-                        this.refInput = el
-                    }}
-                    accept = "image/*"
-                    className="viewInputFile"
-                    type="file"
-                    onChange={this.onChangeAvatar}
+                        ref={el => {
+                            this.refInput = el
+                        }}
+                        accept="image/*"
+                        className="viewInputFile"
+                        type="file"
+                        onChange={this.onChangeAvatar}
                     />
                 </div>
-                <span className="textLabel">Name</span>
+
+                <span className="textLabel">Nickname:</span>
                 <input
                     className="textInput"
-                    value={this.state.nickname ? this.state.nickname : ""}
+                    value={this.state.nickname ? this.state.nickname : ''}
                     placeholder="Your nickname..."
                     onChange={this.onChangeNickname}
                 />
-                <div>
-                    <button className="btnUpdate" onClick={this.uploadAvatar}>
-                        SAVE
-                    </button>
-                    <button className="btnback" onClick={()=>{this.props.history.push('/chat')}}>
-                        BACK
-                    </button>
-                </div>
-                {this.state.isLoading ?(
-                    <div>
+
+                <button className="btnUpdate" onClick={this.uploadAvatar}>
+                    UPDATE
+                </button>
+
+                {this.state.isLoading ? (
+                    <div className="viewLoading">
                         <ReactLoading
-                        type={'spin'}
-                        color={'#203152'}
-                        height={'3%'}
-                        width={'3%'}
+                            type={'spin'}
+                            color={'#203152'}
+                            height={'3%'}
+                            width={'3%'}
                         />
                     </div>
-                ): null}
+                ) : null}
             </div>
         )
     }

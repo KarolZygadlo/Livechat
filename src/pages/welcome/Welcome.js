@@ -2,6 +2,8 @@ import React from 'react';
 import 'react-toastify/dist/ReactToastify.css';
 import './Welcome.css';
 
+
+
 export default class Welcome extends React.Component{
     render() {
         return(
@@ -9,7 +11,7 @@ export default class Welcome extends React.Component{
                 <img 
                 className="avatarWelcome"
                 src={this.props.currentUserPhoto}
-                alt=""
+                alt="icon avatar"
                 />
                 <span className="textTitleWelcome">Welcome {this.props.currentUserName}</span>
             </div>

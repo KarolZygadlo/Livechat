@@ -1,12 +1,11 @@
 const LoginString = {
     ID: 'id',
-    PhotoUrl: 'photoUrl',
-    Nickname: 'nickname',
-    Email: 'email',
-    Password: 'image/',
+    PHOTO_URL: 'photoUrl',
+    NICKNAME: 'nickname',
     DOC: 'added',
-    FirebaseDocumentId: 'docid',
+    FIREBASEDOCUMENTID: 'docid',
     UPLOAD_CHANGED: 'state_changed',
+    DOC_ADDED: 'added',
     PREFIX_IMAGE: 'image/',
     CurrentUserdocKey:''
 }
