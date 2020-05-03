@@ -4,14 +4,13 @@ import ReactLoading from 'react-loading';
 import 'react-toastify/dist/ReactToastify.css';
 import firebase from '../../services/firebase';
 import images from '../../projectImages/ProjectImages';
-import moment from "moment/min/moment-with-locales";
-import './Message.css';
+import './Groupchat.css';
 import LoginString from '../login/LoginStrings';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import md5 from 'md5';
 
 
-export default class Message extends React.Component {
+export default class Groupchat extends React.Component {
     constructor(props){
         super(props);
         this.state = {
@@ -22,7 +21,7 @@ export default class Message extends React.Component {
         this.currentUserId = localStorage.getItem(LoginString.ID);
         this.currentUserPhoto = localStorage.getItem(LoginString.PHOTO_URL); 
         this.stateChanged = localStorage.getItem(LoginString.UPLOAD_CHANGED);
-        this.currentPeerUser = this.props.currentPeerUser
+        this.currentPeerGroup= this.props.currentPeeGroup
         this.groupChatId = null;
         this.listMessage = []
         this.currentPeerUserMessages= [];
@@ -36,8 +35,8 @@ export default class Message extends React.Component {
     }
 
     componentWillReceiveProps(newProps){
-        if(newProps.currentPeerUser){
-            this.currentPeerUser = newProps.currentPeerUser
+        if(newProps.currentPeerGroup){
+            this.currentPeerGroup = newProps.currentPeerGroup
             this.getListHistory()
         }
     }
@@ -57,19 +56,12 @@ export default class Message extends React.Component {
         }
         this.listMessage.length = 0
         this.setState({isLoading: true})
-        if (
-            this.hashString(this.currentUserId) <=
-            this.hashString(this.currentPeerUser.id)
-        ) {
-            this.groupChatId = `${this.currentUserId}-${this.currentPeerUser.id}`
-        } else {
-            this.groupChatId = `${this.currentPeerUser.id}-${this.currentUserId}`
-        }
+
          // Get history and listen new data added
          this.removeListener = firebase.firestore()
-         .collection('privaterooms')
-         .doc(this.groupChatId)
-         .collection(this.groupChatId)
+         .collection('groupchat')
+         .doc('mems')
+         .collection('mems')
          .onSnapshot(
              snapshot => {
                  snapshot.docChanges().forEach(change => {
@@ -197,13 +189,8 @@ export default class Message extends React.Component {
         return(
             <Card className="viewChatBoard">
                 <div className="headerChatBoard">
-                    <img 
-                    className="viewAvatarItem"
-                    src={this.currentPeerUser.photoUrl}
-                    alt=""
-                    />
                     <span className="textHeaderChatBoard">
-                        <p style={{fontSize: '20px'}}>{this.currentPeerUser.nickname}</p>
+                        <p style={{fontSize: '20px'}}>{this.currentPeerGroup}</p>
                     </span>
 
                 </div>
@@ -372,15 +359,6 @@ export default class Message extends React.Component {
                 </div>
             )
         }
-    }
-
-    hashString = str => {
-        let hash = 0
-        for (let i = 0; i < str.length; i++) {
-            hash += Math.pow(str.charCodeAt(i) * 31, str.length - i)
-            hash = hash & hash
-        }
-        return hash
     }
 
     isLastMessageLeft(index) {
