@@ -21,7 +21,7 @@ export default class Groupchat extends React.Component {
         this.currentUserId = localStorage.getItem(LoginString.ID);
         this.currentUserPhoto = localStorage.getItem(LoginString.PHOTO_URL); 
         this.stateChanged = localStorage.getItem(LoginString.UPLOAD_CHANGED);
-        this.currentPeerGroup= this.props.currentPeeGroup
+        this.currentPeerGroup= this.props.currentPeerGroup
         this.groupChatId = null;
         this.listMessage = []
         this.currentPeerUserMessages= [];
@@ -60,8 +60,8 @@ export default class Groupchat extends React.Component {
          // Get history and listen new data added
          this.removeListener = firebase.firestore()
          .collection('groupchat')
-         .doc('mems')
-         .collection('mems')
+         .doc(this.currentPeerGroup)
+         .collection(this.currentPeerGroup)
          .onSnapshot(
              snapshot => {
                  snapshot.docChanges().forEach(change => {
@@ -108,16 +108,16 @@ export default class Groupchat extends React.Component {
         const itemMessage ={
             messageId: this.randomUniqId(),
             userId: this.currentUserId,
-            toUserId: this.currentPeerUser.id,
             nickname: this.currentUserName,
             message: content.trim(),
+            table: this.currentPeerGroup,
             status: type,
             timestamp: this.getNow(),
         }
         firebase.firestore()
-        .collection('privaterooms')
-        .doc(this.groupChatId)
-        .collection(this.groupChatId)
+        .collection('groupchat')
+        .doc(this.currentPeerGroup)
+        .collection(this.currentPeerGroup)
         .doc(this.getNow())
         .set(itemMessage)
         .then(() => {
@@ -282,21 +282,14 @@ export default class Groupchat extends React.Component {
                         viewListMessage.push(
                             <div className="viewWrapItemLeft" key={item.timestamp}>
                                 <div className="viewWrapItemLeft3">
-                                    {this.isLastMessageLeft(index) ? (
-                                        <img
-                                            src={this.currentPeerUser.photoUrl}
-                                            alt="avatar"
-                                            className="peerAvatarLeft"
-                                        />
-                                    ) : (
                                         <div className="viewPaddingLeft"/>
-                                    )}
                                     <div className="viewItemLeft">
                                         <span className="textContentItem">{item.message}</span>
                                     </div>
                                 </div>
                                 {this.isLastMessageLeft(index) ? (
                                     <span className="textTimeLeft">
+                                        {item.nickname}
                   </span>
                                 ) : null}
                             </div>
@@ -305,15 +298,7 @@ export default class Groupchat extends React.Component {
                         viewListMessage.push(
                             <div className="viewWrapItemLeft2" key={item.timestamp}>
                                 <div className="viewWrapItemLeft3">
-                                    {this.isLastMessageLeft(index) ? (
-                                        <img
-                                            src={this.currentPeerUser.photoUrl}
-                                            alt="avatar"
-                                            className="peerAvatarLeft"
-                                        />
-                                    ) : (
                                         <div className="viewPaddingLeft"/>
-                                    )}
                                     <div className="viewItemLeft2">
                                         <img
                                             className="imgItemLeft"
@@ -323,7 +308,7 @@ export default class Groupchat extends React.Component {
                                     </div>
                                 </div>
                                 {this.isLastMessageLeft(index) ? (
-                                    <span className="textTimeLeft">
+                                    <span className="textTimeLeft">{item.nickname}
                   </span>
                                 ) : null}
                             </div>
@@ -332,18 +317,12 @@ export default class Groupchat extends React.Component {
                         viewListMessage.push(
                             <div className="viewWrapItemLeft2" key={item.timestamp}>
                                 <div className="viewWrapItemLeft3">
-                                    {this.isLastMessageLeft(index) ? (
-                                        <img
-                                            src={this.currentPeerUser.photoUrl}
-                                            alt="avatar"
-                                            className="peerAvatarLeft"
-                                        />
-                                    ) : (
+
                                         <div className="viewPaddingLeft"/>
-                                    )}
+
                                 </div>
                                 {this.isLastMessageLeft(index) ? (
-                                    <span className="textTimeLeft">
+                                    <span className="textTimeLeft">{item.nickname}
                   </span>
                                 ) : null}
                             </div>

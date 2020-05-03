@@ -28,6 +28,7 @@ export default class Chat extends React.Component {
         this.onProfileClick = this.onProfileClick.bind(this);
         this.getListUser = this.getListUser.bind(this);
         this.renderListUser = this.renderListUser.bind(this);
+        this.renderListGroups = this.renderListGroups.bind(this);
     }
 
     componentDidMount () {
@@ -70,7 +71,6 @@ export default class Chat extends React.Component {
                  this.props.showToast(0, err.toString())
              }
          )
-         console.log(this.allUsers)
     }
 
     renderListUser=()=>{
@@ -84,6 +84,7 @@ export default class Chat extends React.Component {
                             className = "viewWrapItem"
                             onClick = {()=>{
                                 this.setState({currentPeerUser: item})
+                                this.setState({currentPeerGroup: null})
                             }}
                             >
                             <img
@@ -115,12 +116,13 @@ export default class Chat extends React.Component {
                             id={item.key}
                             className = "viewWrapItem"
                             onClick = {()=>{
-                                this.setState({currentPeerGroup: item})
+                                this.setState({currentPeerGroup: item})                            
+                                this.setState({currentPeerUser: null})
                             }}
                             >
                             <img
                             className = "viewAvatarItem"
-                            src = {item.photoUrl}
+                            src = ""
                             alt = ""
                             />
                             <div className="viewWrapContentItem">
@@ -231,6 +233,7 @@ export default class Chat extends React.Component {
                         </div>
                         {this.renderListGroups()}
                         {this.renderListUser()}
+                        
                     </div>
                     <div className="viewBoard">
                         {boardView}
