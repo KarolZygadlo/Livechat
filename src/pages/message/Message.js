@@ -55,7 +55,6 @@ export default class Message extends React.Component {
         if (this.removeListener) {
             this.removeListener()
         }
-        this.listMessage.length = 0
         this.setState({isLoading: true})
         if (
             this.hashString(this.currentUserId) <=
@@ -71,11 +70,11 @@ export default class Message extends React.Component {
          .doc(this.groupChatId)
          .collection(this.groupChatId)
          .onSnapshot(
-             snapshot => {
-                 snapshot.docChanges().forEach(change => {
-                     if (change.type === LoginString.DOC) {
-                         this.listMessage.push(change.doc.data())
-                     }
+            querySnapshot => {
+                this.listMessage = []
+                querySnapshot.forEach(doc => {
+                    this.listMessage.push(doc.data())
+
                  })
                  this.setState({isLoading: false})
              },
@@ -273,15 +272,15 @@ export default class Message extends React.Component {
             let viewListMessage = []
             this.listMessage.forEach((item, index) => {
                 if (item.userId === this.currentUserId) {
-                    if (item.status === 0) {
+                    if (item.status === 0 || item.status === 2) {
                         viewListMessage.push(
-                            <div className="viewItemRight" key={item.timestamp} >
+                            <div className="viewItemRight" key={item.timestamp} onClick={() => {this.deleteMessage(item.timestamp)}}>
                                 <span className="textContentItem">{item.message}</span>
                             </div>
                         )
                     } else {
                         viewListMessage.push(
-                            <div className="viewItemRight2" key={item.timestamp}>
+                            <div className="viewItemRight2" key={item.timestamp} onClick={() => {this.deleteMessage(item.timestamp)}}>
                                 <img
                                     className="imgItemRight"
                                     src={item.message}
@@ -405,6 +404,19 @@ export default class Message extends React.Component {
         } else {
             return false
         }
+    }
+
+    deleteMessage =(messageid)=> {
+        firebase.firestore()
+        .collection('privaterooms')
+        .doc(this.groupChatId)
+        .collection(this.groupChatId)
+            .doc(messageid)
+            .update({
+                status: 2,
+                message: "Wiadomość usunięta",
+
+            })
     }
 
 }
