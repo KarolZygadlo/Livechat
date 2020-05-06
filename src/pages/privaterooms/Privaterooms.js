@@ -5,13 +5,13 @@ import 'react-toastify/dist/ReactToastify.css';
 import firebase from '../../services/firebase';
 import images from '../../projectImages/ProjectImages';
 import moment from "moment/min/moment-with-locales";
-import './Message.css';
+import './Privaterooms.css';
 import LoginString from '../login/LoginStrings';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import md5 from 'md5';
 
 
-export default class Message extends React.Component {
+export default class Privaterooms extends React.Component {
     constructor(props){
         super(props);
         this.state = {
@@ -198,7 +198,7 @@ export default class Message extends React.Component {
                 <div className="headerChatBoard">
                     <img 
                     className="viewAvatarItem"
-                    src={this.currentPeerUser.photoUrl}
+                    src={this.currentPeerUser.avatar}
                     alt=""
                     />
                     <span className="textHeaderChatBoard">
@@ -290,42 +290,25 @@ export default class Message extends React.Component {
                         )
                     }
                 } else {
-                    if (item.status === 0) {
+                    if (item.status === 0 || item.status === 2) {
                         viewListMessage.push(
                             <div className="viewWrapItemLeft" key={item.timestamp}>
                                 <div className="viewWrapItemLeft3">
-                                    {this.isLastMessageLeft(index) ? (
-                                        <img
-                                            src={this.currentPeerUser.photoUrl}
-                                            alt="avatar"
-                                            className="peerAvatarLeft"
-                                        />
-                                    ) : (
-                                        <div className="viewPaddingLeft"/>
-                                    )}
                                     <div className="viewItemLeft">
                                         <span className="textContentItem">{item.message}</span>
                                     </div>
                                 </div>
                                 {this.isLastMessageLeft(index) ? (
                                     <span className="textTimeLeft">
-                  </span>
+                                    {item.nickname}   
+                                    </span>
                                 ) : null}
                             </div>
                         )
-                    } else if (item.status === 1) {
+                    } else {
                         viewListMessage.push(
                             <div className="viewWrapItemLeft2" key={item.timestamp}>
                                 <div className="viewWrapItemLeft3">
-                                    {this.isLastMessageLeft(index) ? (
-                                        <img
-                                            src={this.currentPeerUser.photoUrl}
-                                            alt="avatar"
-                                            className="peerAvatarLeft"
-                                        />
-                                    ) : (
-                                        <div className="viewPaddingLeft"/>
-                                    )}
                                     <div className="viewItemLeft2">
                                         <img
                                             className="imgItemLeft"
@@ -335,32 +318,12 @@ export default class Message extends React.Component {
                                     </div>
                                 </div>
                                 {this.isLastMessageLeft(index) ? (
-                                    <span className="textTimeLeft">
-                  </span>
+                                    <span className="textTimeLeft"> {item.nickname}
+                                    </span>
                                 ) : null}
                             </div>
                         )
-                    } else {
-                        viewListMessage.push(
-                            <div className="viewWrapItemLeft2" key={item.timestamp}>
-                                <div className="viewWrapItemLeft3">
-                                    {this.isLastMessageLeft(index) ? (
-                                        <img
-                                            src={this.currentPeerUser.photoUrl}
-                                            alt="avatar"
-                                            className="peerAvatarLeft"
-                                        />
-                                    ) : (
-                                        <div className="viewPaddingLeft"/>
-                                    )}
-                                </div>
-                                {this.isLastMessageLeft(index) ? (
-                                    <span className="textTimeLeft">
-                  </span>
-                                ) : null}
-                            </div>
-                        )
-                    }
+                    } 
                 }
             })
             return viewListMessage

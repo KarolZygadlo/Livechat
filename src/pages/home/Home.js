@@ -52,7 +52,7 @@ export default class Home extends Component {
                             .set({
                                 id: user.uid,
                                 nickname: user.displayName,
-                                photoUrl: user.photoURL
+                                avatar: user.photoURL
                             })
                             .then(data => {
                                 // Write user info to local
@@ -71,7 +71,7 @@ export default class Home extends Component {
                         )
                         localStorage.setItem(
                             LoginString.PHOTO_URL,
-                            result.docs[0].data().photoUrl
+                            result.docs[0].data().avatar
                         )
                         this.setState({isLoading: false}, () => {
                             this.props.history.push('./chat')

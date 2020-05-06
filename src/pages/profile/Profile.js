@@ -77,7 +77,7 @@ export default class Profile extends React.Component{
         if (isUpdatePhotoUrl) {
             newInfo = {
                 nickname: this.state.nickname,
-                photoUrl: downloadURL
+                avatar: downloadURL
             }
         } else {
             newInfo = {

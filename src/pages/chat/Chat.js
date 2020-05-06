@@ -3,7 +3,7 @@ import LoginString from "../login/LoginStrings";
 import firebase from '../../services/firebase';
 import './Chat.css';
 import ReactDOM from 'react-dom';
-import Message from '../message/Message';
+import Privaterooms from '../privaterooms/Privaterooms';
 import Welcome from '../welcome/Welcome';
 import Groupchat from '../groupchat/Groupchat'
 
@@ -74,7 +74,6 @@ export default class Chat extends React.Component {
     }
 
     renderListUser=()=>{
-        if(this.allUsers.length > 0){
             let viewListUser = []
             this.allUsers.forEach((item)=>{
                 if(item.id != this.currentUserId) {
@@ -89,7 +88,7 @@ export default class Chat extends React.Component {
                             >
                             <img
                             className = "viewAvatarItem"
-                            src = {item.photoUrl}
+                            src = {item.avatar}
                             alt = ""
                             />
                             <div className="viewWrapContentItem">
@@ -102,9 +101,6 @@ export default class Chat extends React.Component {
                 }
             })
             return viewListUser
-        }else{
-            console.log("No users in list")
-        }
     }
 
     renderListGroups=()=>{
@@ -132,67 +128,28 @@ export default class Chat extends React.Component {
                             </div>
                         </button>
                     ) 
-            })
+            });
             return viewListGroups
         }else{
             console.log("No groups in list")
         }
     }
 
-    // searchHandler =(event)=>{
-    //     let searchQuery = event.target.value.toLowerCase(),
-    //     displayedContacts = this.allUsers.filter((el)=>{
-    //         let SearchValue = el.nickname.toLowerCase();
-    //         return SearchValue.indexOf(searchQuery) !== -1;
-    //     })
-    //     console.log(displayedContacts)
-    //     this.displayedContacts = displayedContacts
-    //     this.displaySearchedContact()
-    // }
+    searchHandler =(event)=>{
+        let searchQuery = event.target.value.toLowerCase(),
+        displayedContacts = this.allUsers.filter((el)=>{
+            let SearchValue = el.nickname.toLowerCase();
+            return SearchValue.indexOf(searchQuery) !== -1;
+        })
+        console.log(displayedContacts)
+        this.displayedContacts = displayedContacts
+    }
 
-    // displaySearchedContact=()=>{
-    //     if(this.displayedContacts.length > 0){
-    //         let viewListUser = []
-    //         let classname = ""
-    //         this.displayedContacts.forEach((item)=>{
-    //             if(item.id != this.currentUserId) {
-    //                 viewListUser.push(
-    //                     <button
-    //                     id={item.key}
-    //                     className = {classname}
-    //                     onClick = {()=>{
-    //                         this.setState({currentPeerUser: item})
-    //                     }}
-    //                     >
-    //                         <img
-    //                         className = "viewAvatarItem"
-    //                         src = {item.photoUrl}
-    //                         alt = ""
-    //                         />
-    //                         <div className="viewWrapContentItem">
-    //                             <span className="textItem">
-    //                                 {item.nickname}
-    //                             </span>
-    //                         </div>
-    //                         {classname === 'viewWrapItemNotification' ?
-    //                         <div className="notificationparagraph">
-    //                         <p id={item.key} className="newmessages">New messages</p>
-    //                         </div>:null}
-    //                     </button>
-    //                 ) 
-    //             }
-    //         })
-    //         return viewListUser
-    //     }else{
-    //         console.log("No users in list")
-    //     }
-    // }
-    
     render() {
 
         var boardView;
         if (this.state.currentPeerUser) {
-            boardView = <Message
+            boardView = <Privaterooms
             currentPeerUser ={this.state.currentPeerUser}
             showToast={this.props.showToast}
             />;
@@ -231,8 +188,8 @@ export default class Chat extends React.Component {
                                 />
                             </div>
                         </div>
-                        {this.renderListGroups()}
                         {this.renderListUser()}
+                        {this.renderListGroups()}
                         
                     </div>
                     <div className="viewBoard">

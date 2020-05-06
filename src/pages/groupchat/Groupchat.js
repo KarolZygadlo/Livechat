@@ -57,17 +57,16 @@ export default class Groupchat extends React.Component {
         this.listMessage.length = 0
         this.setState({isLoading: true})
 
-         // Get history and listen new data added
-         this.removeListener = firebase.firestore()
+        this.removeListener = firebase.firestore()
          .collection('groupchat')
          .doc(this.currentPeerGroup)
          .collection(this.currentPeerGroup)
          .onSnapshot(
-             snapshot => {
-                 snapshot.docChanges().forEach(change => {
-                     if (change.type === LoginString.DOC) {
-                         this.listMessage.push(change.doc.data())
-                     }
+            querySnapshot => {
+                this.listMessage = []
+                querySnapshot.forEach(doc => {
+                    this.listMessage.push(doc.data())
+
                  })
                  this.setState({isLoading: false})
              },
@@ -75,7 +74,6 @@ export default class Groupchat extends React.Component {
                  this.props.showToast(0, err.toString())
              }
          )
-
         
     }
 
@@ -260,15 +258,15 @@ export default class Groupchat extends React.Component {
             let viewListMessage = []
             this.listMessage.forEach((item, index) => {
                 if (item.userId === this.currentUserId) {
-                    if (item.status === 0) {
+                    if (item.status === 0 || item.status === 2) {
                         viewListMessage.push(
-                            <div className="viewItemRight" key={item.timestamp} >
+                            <div className="viewItemRight" key={item.timestamp} onClick={() => {this.deleteMessage(item.timestamp)}}>
                                 <span className="textContentItem">{item.message}</span>
                             </div>
                         )
                     } else {
                         viewListMessage.push(
-                            <div className="viewItemRight2" key={item.timestamp}>
+                            <div className="viewItemRight2" key={item.timestamp} onClick={() => {this.deleteMessage(item.timestamp)}}>
                                 <img
                                     className="imgItemRight"
                                     src={item.message}
@@ -278,27 +276,25 @@ export default class Groupchat extends React.Component {
                         )
                     }
                 } else {
-                    if (item.status === 0) {
+                    if (item.status === 0 || item.status === 2) {
                         viewListMessage.push(
                             <div className="viewWrapItemLeft" key={item.timestamp}>
                                 <div className="viewWrapItemLeft3">
-                                        <div className="viewPaddingLeft"/>
                                     <div className="viewItemLeft">
                                         <span className="textContentItem">{item.message}</span>
                                     </div>
                                 </div>
                                 {this.isLastMessageLeft(index) ? (
                                     <span className="textTimeLeft">
-                                        {item.nickname}
-                  </span>
+                                    {item.nickname}   
+                                    </span>
                                 ) : null}
                             </div>
                         )
-                    } else if (item.status === 1) {
+                    } else {
                         viewListMessage.push(
                             <div className="viewWrapItemLeft2" key={item.timestamp}>
                                 <div className="viewWrapItemLeft3">
-                                        <div className="viewPaddingLeft"/>
                                     <div className="viewItemLeft2">
                                         <img
                                             className="imgItemLeft"
@@ -308,26 +304,12 @@ export default class Groupchat extends React.Component {
                                     </div>
                                 </div>
                                 {this.isLastMessageLeft(index) ? (
-                                    <span className="textTimeLeft">{item.nickname}
-                  </span>
+                                    <span className="textTimeLeft"> {item.nickname}
+                                    </span>
                                 ) : null}
                             </div>
                         )
-                    } else {
-                        viewListMessage.push(
-                            <div className="viewWrapItemLeft2" key={item.timestamp}>
-                                <div className="viewWrapItemLeft3">
-
-                                        <div className="viewPaddingLeft"/>
-
-                                </div>
-                                {this.isLastMessageLeft(index) ? (
-                                    <span className="textTimeLeft">{item.nickname}
-                  </span>
-                                ) : null}
-                            </div>
-                        )
-                    }
+                    } 
                 }
             })
             return viewListMessage
@@ -362,6 +344,19 @@ export default class Groupchat extends React.Component {
         } else {
             return false
         }
+    }
+
+    deleteMessage =(messageid)=> {
+        firebase.firestore()
+        .collection('groupchat')
+        .doc(this.currentPeerGroup)
+        .collection(this.currentPeerGroup)
+            .doc(messageid)
+            .update({
+                status: 2,
+                message: "Wiadomość usunięta",
+
+            })
     }
 
 }
