@@ -78,7 +78,7 @@ export default class Groupchat extends React.Component {
     }
 
     randomUniqId =()=>{
-        let uniqId = md5((Math.random().toString(36).substring(2, 8)) + this.currentUserId);
+        let uniqId = md5((Math.random().toString(36).substring(2, 8)) + this.currentUserId + firebase.firestore.FieldValue.serverTimestamp());
         return uniqId;
     }
 
@@ -110,7 +110,7 @@ export default class Groupchat extends React.Component {
             message: content.trim(),
             table: this.currentPeerGroup,
             status: type,
-            timestamp: this.getNow(),
+            timestamp: firebase.firestore.FieldValue.serverTimestamp(),
         }
         firebase.firestore()
         .collection('groupchat')
@@ -260,13 +260,13 @@ export default class Groupchat extends React.Component {
                 if (item.userId === this.currentUserId) {
                     if (item.status === 0 || item.status === 2) {
                         viewListMessage.push(
-                            <div className="viewItemRight" key={item.timestamp} onClick={() => {this.deleteMessage(item.timestamp)}}>
+                            <div className="viewItemRight" key={item.timestamp} onClick={() => {this.deleteMessage(item.messageId)}}>
                                 <span className="textContentItem">{item.message}</span>
                             </div>
                         )
                     } else {
                         viewListMessage.push(
-                            <div className="viewItemRight2" key={item.timestamp} onClick={() => {this.deleteMessage(item.timestamp)}}>
+                            <div className="viewItemRight2" key={item.timestamp} onClick={() => {this.deleteMessage(item.messageId)}}>
                                 <img
                                     className="imgItemRight"
                                     src={item.message}
@@ -357,6 +357,31 @@ export default class Groupchat extends React.Component {
                 message: "Wiadomość usunięta",
 
             })
+    }
+
+    deleteMessage =(id)=> {
+        firebase.firestore()
+            .collection('groupchat')
+            .doc(this.currentPeerGroup)
+            .collection(this.currentPeerGroup)
+            .where("messageId", "==", id)
+            .get()
+            .then(querySnapshot => {
+                querySnapshot.forEach(doc => {
+                    const docId = doc.id;
+                    firebase.firestore()
+                        .collection('groupchat')
+                        .doc(this.currentPeerGroup)
+                        .collection(this.currentPeerGroup)
+                        .doc(docId)
+                        .update({
+                            status: 2,
+                            message: "Wiadomość usunięta"
+
+                        });
+
+                });
+            });
     }
 
 }

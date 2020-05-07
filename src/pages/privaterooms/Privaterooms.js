@@ -23,7 +23,7 @@ export default class Privaterooms extends React.Component {
         this.currentUserPhoto = localStorage.getItem(LoginString.PHOTO_URL); 
         this.stateChanged = localStorage.getItem(LoginString.UPLOAD_CHANGED);
         this.currentPeerUser = this.props.currentPeerUser
-        this.groupChatId = null;
+        this.privateChatId = null;
         this.listMessage = []
         this.currentPeerUserMessages= [];
         this.removeListener= null;
@@ -58,17 +58,17 @@ export default class Privaterooms extends React.Component {
         this.setState({isLoading: true})
         if (
             this.hashString(this.currentUserId) <=
-            this.hashString(this.currentPeerUser.id)
+            this.hashString(this.currentPeerUser.userId)
         ) {
-            this.groupChatId = `${this.currentUserId}-${this.currentPeerUser.id}`
+            this.privateChatId = `${this.currentUserId}-${this.currentPeerUser.userId}`
         } else {
-            this.groupChatId = `${this.currentPeerUser.id}-${this.currentUserId}`
+            this.privateChatId = `${this.currentPeerUser.userId}-${this.currentUserId}`
         }
          // Get history and listen new data added
          this.removeListener = firebase.firestore()
          .collection('privaterooms')
-         .doc(this.groupChatId)
-         .collection(this.groupChatId)
+         .doc(this.privateChatId)
+         .collection(this.privateChatId)
          .onSnapshot(
             querySnapshot => {
                 this.listMessage = []
@@ -87,7 +87,7 @@ export default class Privaterooms extends React.Component {
     }
 
     randomUniqId =()=>{
-        let uniqId = md5((Math.random().toString(36).substring(2, 8)) + this.currentUserId);
+        let uniqId = md5((Math.random().toString(36).substring(2, 8)) + this.currentUserId + firebase.firestore.FieldValue.serverTimestamp());
         return uniqId;
     }
 
@@ -115,16 +115,16 @@ export default class Privaterooms extends React.Component {
         const itemMessage ={
             messageId: this.randomUniqId(),
             userId: this.currentUserId,
-            toUserId: this.currentPeerUser.id,
+            toUserId: this.currentPeerUser.userId,
             nickname: this.currentUserName,
             message: content.trim(),
             status: type,
-            timestamp: this.getNow(),
+            timestamp: firebase.firestore.FieldValue.serverTimestamp(),
         }
         firebase.firestore()
         .collection('privaterooms')
-        .doc(this.groupChatId)
-        .collection(this.groupChatId)
+        .doc(this.privateChatId)
+        .collection(this.privateChatId)
         .doc(this.getNow())
         .set(itemMessage)
         .then(() => {
@@ -274,13 +274,13 @@ export default class Privaterooms extends React.Component {
                 if (item.userId === this.currentUserId) {
                     if (item.status === 0 || item.status === 2) {
                         viewListMessage.push(
-                            <div className="viewItemRight" key={item.timestamp} onClick={() => {this.deleteMessage(item.timestamp)}}>
+                            <div className="viewItemRight" key={item.timestamp} onClick={() => {this.deleteMessage(item.messageId)}}>
                                 <span className="textContentItem">{item.message}</span>
                             </div>
                         )
                     } else {
                         viewListMessage.push(
-                            <div className="viewItemRight2" key={item.timestamp} onClick={() => {this.deleteMessage(item.timestamp)}}>
+                            <div className="viewItemRight2" key={item.timestamp} onClick={() => {this.deleteMessage(item.messageId)}}>
                                 <img
                                     className="imgItemRight"
                                     src={item.message}
@@ -369,17 +369,29 @@ export default class Privaterooms extends React.Component {
         }
     }
 
-    deleteMessage =(messageid)=> {
+    deleteMessage =(id)=> {
         firebase.firestore()
-        .collection('privaterooms')
-        .doc(this.groupChatId)
-        .collection(this.groupChatId)
-            .doc(messageid)
-            .update({
-                status: 2,
-                message: "Wiadomość usunięta",
+            .collection('privaterooms')
+            .doc(this.privateChatId)
+            .collection(this.privateChatId)
+            .where("messageId", "==", id)
+            .get()
+            .then(querySnapshot => {
+                querySnapshot.forEach(doc => {
+                    const docId = doc.id;
+                    firebase.firestore()
+                        .collection('privaterooms')
+                        .doc(this.privateChatId)
+                        .collection(this.privateChatId)
+                        .doc(docId)
+                        .update({
+                            status: 2,
+                            message: "Wiadomość usunięta"
 
-            })
+                        });
+
+                });
+            });
     }
 
 }

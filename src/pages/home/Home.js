@@ -50,7 +50,7 @@ export default class Home extends Component {
                             .collection('users')
                             .doc(user.uid)
                             .set({
-                                id: user.uid,
+                                userId: user.uid,
                                 nickname: user.displayName,
                                 avatar: user.photoURL
                             })
@@ -64,7 +64,7 @@ export default class Home extends Component {
                                 })
                             })
                     } else {
-                        localStorage.setItem(LoginString.ID, result.docs[0].data().id)
+                        localStorage.setItem(LoginString.ID, result.docs[0].data().userId)
                         localStorage.setItem(
                             LoginString.NICKNAME,
                             result.docs[0].data().nickname

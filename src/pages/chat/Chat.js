@@ -76,7 +76,7 @@ export default class Chat extends React.Component {
     renderListUser=()=>{
             let viewListUser = []
             this.allUsers.forEach((item)=>{
-                if(item.id != this.currentUserId) {
+                if(item.userId != this.currentUserId) {
                     viewListUser.push(
                             <button
                             id={item.key}
