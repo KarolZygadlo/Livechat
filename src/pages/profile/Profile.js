@@ -13,7 +13,8 @@ export default class Profile extends React.Component{
             isLoading: false,
             id: localStorage.getItem(LoginString.ID),
             nickname: localStorage.getItem(LoginString.NICKNAME),
-            photoUrl: localStorage.getItem(LoginString.PHOTO_URL)
+            photoUrl: localStorage.getItem(LoginString.PHOTO_URL),
+            documentKey: localStorage.getItem(LoginString.FIREBASEDOCUMENTID)
         }
         this.newAvatar = null
         this.newPhotoUrl = ''
@@ -86,7 +87,7 @@ export default class Profile extends React.Component{
         }
         firebase.firestore()
             .collection('users')
-            .doc(this.state.id)
+            .doc(this.state.documentKey)
             .update(newInfo)
             .then(data => {
                 localStorage.setItem(LoginString.NICKNAME, this.state.nickname)
@@ -135,6 +136,10 @@ export default class Profile extends React.Component{
 
                 <button className="btnUpdate" onClick={this.uploadAvatar}>
                     UPDATE
+                </button>
+
+                <button className="btnUpdate" onClick={() => this.props.history.goBack()}>
+                BACK
                 </button>
 
                 {this.state.isLoading ? (
