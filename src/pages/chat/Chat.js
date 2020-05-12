@@ -20,6 +20,7 @@ export default class Chat extends React.Component {
         this.currentUserName = localStorage.getItem(LoginString.NICKNAME);
         this.currentUserId = localStorage.getItem(LoginString.ID);
         this.currentUserPhoto = localStorage.getItem(LoginString.PHOTO_URL); 
+        this.lastUser = localStorage.getItem(LoginString.LASTUSER);
 
         this.searchUsers = []
         this.allUsers = []
@@ -44,18 +45,20 @@ export default class Chat extends React.Component {
           let newNotification = [];
           querySnapshot.forEach(doc => {
             newNotification.push(doc.data());
+            if (newNotification[0].fromUserId !=  this.lastUser) {
             var notification = new Notification("Nowa wiadomość od "+ newNotification[0].fromUserName);
+            }
           });
       });
     }
 
     checkNotificationsGrant =() =>{
-            if (Notification.permission !== "denied") {
-                Notification.requestPermission().then(function(permission) { 
-                  console.log('udzielono zgody');
-                });
-              }
+        if (Notification.permission !== "denied") {
+            Notification.requestPermission().then(function(permission) { 
+                console.log('udzielono zgody');
+            });
         }
+    }
   
 
     checkLogin = () => {

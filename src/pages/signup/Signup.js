@@ -40,14 +40,12 @@ export default class SignUp extends Component {
                     nickname,
                     userId:result.user.uid,
                     email,
-                    pwd: md5(this.state.password),
-                    avatar:'',
+                    avatar:'https://firebasestorage.googleapis.com/v0/b/chatapp-da38a.appspot.com/o/person.png?alt=media&token=d2ba3ade-58e7-46d6-b81f-5000c01f215a',
                 }).then((docRef)=>{
                     localStorage.setItem(LoginString.ID, result.user.uid);
                     localStorage.setItem(LoginString.NICKNAME, nickname);
                     localStorage.setItem(LoginString.EMAIL, email);
-                    localStorage.setItem(LoginString.PWD, password);
-                    localStorage.setItem(LoginString.PHOTO_URL, "");
+                    localStorage.setItem(LoginString.PHOTO_URL, "https://firebasestorage.googleapis.com/v0/b/chatapp-da38a.appspot.com/o/person.png?alt=media&token=d2ba3ade-58e7-46d6-b81f-5000c01f215a");
                     localStorage.setItem(LoginString.FIREBASEDOCUMENTID, docRef.id);
                     this.setState({
                         name:'',

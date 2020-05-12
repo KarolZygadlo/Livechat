@@ -4,7 +4,6 @@ import ReactLoading from 'react-loading';
 import 'react-toastify/dist/ReactToastify.css';
 import firebase from '../../services/firebase';
 import images from '../../projectImages/ProjectImages';
-import moment from "moment/min/moment-with-locales";
 import './Privaterooms.css';
 import LoginString from '../login/LoginStrings';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -22,12 +21,13 @@ export default class Privaterooms extends React.Component {
         this.currentUserId = localStorage.getItem(LoginString.ID);
         this.currentUserPhoto = localStorage.getItem(LoginString.PHOTO_URL); 
         this.stateChanged = localStorage.getItem(LoginString.UPLOAD_CHANGED);
-        this.currentPeerUser = this.props.currentPeerUser
+        this.currentPeerUser = this.props.currentPeerUser;
         this.privateChatId = null;
         this.listMessage = []
         this.currentPeerUserMessages= [];
         this.removeListener= null;
         this.currentPhotoFile = null;
+        
 
     }
 
@@ -64,6 +64,7 @@ export default class Privaterooms extends React.Component {
         } else {
             this.privateChatId = `${this.currentPeerUser.userId}-${this.currentUserId}`
         }
+        localStorage.setItem(LoginString.LASTUSER, this.currentPeerUser.userId)
          // Get history and listen new data added
          this.removeListener = firebase.firestore()
          .collection('privaterooms')
