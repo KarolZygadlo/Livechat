@@ -11,7 +11,7 @@ export default class Welcome extends React.Component{
                 <img 
                 className="avatarWelcome"
                 src={this.props.currentUserPhoto}
-                alt="icon avatar"
+                alt=""
                 />
                 <span className="textTitleWelcome">Welcome {this.props.currentUserName}</span>
             </div>

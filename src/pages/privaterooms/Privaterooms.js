@@ -129,6 +129,14 @@ export default class Privaterooms extends React.Component {
         .set(itemMessage)
         .then(() => {
             this.setState({inputValue: ''})
+                firebase.firestore().collection("notifications")
+                    .doc(this.currentPeerUser.userId)
+                    .set({
+                        fromUserName: this.currentUserName,
+                        fromUserId: this.currentUserId,
+                        toUserId: this.currentPeerUser.userId,
+                        createdAt: this.getNow()
+                    })
         })
         .catch(err => {
             this.props.showToast(0, err.toString())

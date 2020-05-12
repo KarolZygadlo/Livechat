@@ -51,7 +51,7 @@ export default class Login extends React.Component {
                     querySnapshot.forEach(function(doc) {
                         const currentdata = doc.data()
                         localStorage.setItem(LoginString.FIREBASEDOCUMENTID, doc.id);
-                        localStorage.setItem(LoginString.ID, currentdata.id);
+                        localStorage.setItem(LoginString.ID, currentdata.userId);
                         localStorage.setItem(LoginString.NICKNAME, currentdata.nickname);
                         localStorage.setItem(LoginString.EMAIL, currentdata.email);
                         localStorage.setItem(LoginString.PWD, currentdata.pwd);
@@ -83,15 +83,17 @@ export default class Login extends React.Component {
             <Button variant="primary" type="submit">
                 Login
             </Button>
-            <div className="CenterAliningItems">
-
             <div class="mt-5">
-            <p style={{color: 'grey'}}>Alredy have an account?</p>
-                    <Link to="/signup">
-                        Sign Up
-                    </Link>
-                    </div>
-                </div>
+            <p style={{color: 'grey'}}>Don't have account?</p>
+                <Link to="/signup">
+                    Sign Up
+                </Link>
+            </div>
+            <div class="">
+                <Link to="/">
+                    Go back
+                </Link>
+            </div>    
             <div>
                 <p id='1' style={{color:'red'}}></p>
             </div>

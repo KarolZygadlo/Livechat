@@ -9,8 +9,6 @@
     font-weight: bold;
     font-size: 15px;
     color: white;
-    background-color: #1ebea5;
-    /* box-sizing: border-box; */
     padding: 25px;
 
 }
@@ -41,10 +39,9 @@
     right: 0;
     margin-right: 30px;
     cursor: pointer;
-    color:black;
+    color:white;
     border-radius: 50px;
-    background-color: white;
-    box-shadow: 0 5px 5px #808888;
+    background-color: #007bff;
 }
 
 .ProfilePicture {
@@ -52,7 +49,7 @@
     height: 45px;
     background-image: url(../../images/nopic.jpg);
     left:10px;
-   position: absolute;
+    position: absolute;
     cursor: pointer;
     border-radius: 50px;
 }

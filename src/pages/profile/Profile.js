@@ -138,7 +138,7 @@ export default class Profile extends React.Component{
                     UPDATE
                 </button>
 
-                <button className="btnUpdate" onClick={() => this.props.history.goBack()}>
+                <button className="btnback" onClick={() => this.props.history.goBack()}>
                 BACK
                 </button>
 

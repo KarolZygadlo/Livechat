@@ -1,28 +1,3 @@
-.profileroot{
-    align-items: center;
-    display: flex;
-    min-height: 61rem;
-    flex-direction: column;
-    background: linear-gradient(-45deg, #ee7752, #4adf838a, #23a6d5, #23d5ab);
-    background-size: 400% 400%;
-
-    animation: gradient 15s ease infinite;
-}
-@keyframes gradient {
-    0% {
-        background-position: 0% 50%;
-    }
-    50% {
-        background-position: 100% 50%;
-    }
-    100% {
-        background-position: 0% 50%;
-  }
-}
-.profileitems {
-    flex-direction: column;
-}
-
 .viewLoading {
     position: absolute;
     top: 0;
@@ -35,13 +10,9 @@
     justify-content: center;
 }
 
-.headerprofile {
-    font-weight: bold;
-    font-size: 20px;
-    color: #203152;
-    background-color: #1ebea5;
-    padding: 20px;
-    box-shadow: 0px 4px 4px #808888;
+.header {
+    background-color: #007bff!important;
+    color: white!important;
 }
 
 .avatar {
@@ -82,9 +53,9 @@ input::placeholder {
 }
 
 .btnUpdate {
-    background-color: #f5a623;
+    background-color: #007bff;
     border: none;
-    color: #203152;
+    color: #fff;
     padding: 10px;
     width: 250px;
     text-align: center;
@@ -96,9 +67,9 @@ input::placeholder {
     cursor: pointer;
 }
 .btnback {
-    background-color: #d23f0ebd;
+    background-color: #007bff;
     border: none;
-    color: #203152;
+    color: #fff;
     padding: 10px;
     width: 250px;
     text-align: center;
@@ -106,7 +77,7 @@ input::placeholder {
     align-self: center;
    border-radius: 20px;
     font-weight: bold;
-    margin-top: 100px;
+    margin-top: 20px;
     cursor: pointer;
 }
 

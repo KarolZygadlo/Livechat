@@ -32,8 +32,31 @@ export default class Chat extends React.Component {
     }
 
     componentDidMount () {
+        this.checkNotificationsGrant()
+        this.checkNotifications()
         this.checkLogin()
     }
+
+    checkNotifications =() =>{
+        this.listenerNotify = firebase.firestore().collection("notifications")
+        .where('toUserId', '==', this.currentUserId)
+        .onSnapshot(querySnapshot => {
+          let newNotification = [];
+          querySnapshot.forEach(doc => {
+            newNotification.push(doc.data());
+            var notification = new Notification("Nowa wiadomość od "+ newNotification[0].fromUserName);
+          });
+      });
+    }
+
+    checkNotificationsGrant =() =>{
+            if (Notification.permission !== "denied") {
+                Notification.requestPermission().then(function(permission) { 
+                  console.log('udzielono zgody');
+                });
+              }
+        }
+  
 
     checkLogin = () => {
         if (!localStorage.getItem(LoginString.ID)) {

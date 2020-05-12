@@ -10,6 +10,6 @@ const LoginString = {
     DOC_ADDED: 'added',
     PREFIX_IMAGE: 'image/',
     CurrentUserdocKey:'',
-
+    setNotification: '',
 }
 export default LoginString
