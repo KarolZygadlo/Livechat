@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import ReactLoading from 'react-loading';
 import firebase from '../../services/firebase';
 import LoginString from '../login/LoginStrings';
 import Form from 'react-bootstrap/Form';
@@ -35,6 +36,17 @@ export default class Login extends React.Component {
         }else {
             this.setState({isLoading: false})
         }
+    }
+
+    passwordReset =()=> {
+        firebase.auth().sendPasswordResetEmail(this.state.email).catch(function(error){
+            if(error != null){
+                document.getElementById('1').innerHTML=error;
+            }
+        })
+        document.getElementById('1').innerHTML="Check your email, to change the password";
+        
+        
     }
 
     async handleSubmit(event) {
@@ -82,6 +94,11 @@ export default class Login extends React.Component {
             <Button variant="primary" type="submit">
                 Login
             </Button>
+            <div className="mt-2">
+            <Button variant="primary" onClick={() => {this.passwordReset()}}>
+                Password Reset
+            </Button>
+            </div>
             <div class="mt-5">
             <p style={{color: 'grey'}}>Don't have account?</p>
                 <Link to="/signup">
@@ -92,7 +109,7 @@ export default class Login extends React.Component {
                 <Link to="/">
                     Go back
                 </Link>
-            </div>    
+            </div>   
             <div>
                 <p id='1' style={{color:'red'}}></p>
             </div>

@@ -20,7 +20,6 @@ export default class Chat extends React.Component {
         this.currentUserName = localStorage.getItem(LoginString.NICKNAME);
         this.currentUserId = localStorage.getItem(LoginString.ID);
         this.currentUserPhoto = localStorage.getItem(LoginString.PHOTO_URL); 
-        this.lastUser = localStorage.getItem(LoginString.LASTUSER);
 
         this.searchUsers = []
         this.allUsers = []
@@ -45,7 +44,10 @@ export default class Chat extends React.Component {
           let newNotification = [];
           querySnapshot.forEach(doc => {
             newNotification.push(doc.data());
+            this.lastUser = localStorage.getItem(LoginString.LASTUSER);
             if (newNotification[0].fromUserId !=  this.lastUser) {
+            console.log(newNotification[0].fromUserId);
+            console.log(this.lastUser);
             var notification = new Notification("Nowa wiadomość od "+ newNotification[0].fromUserName);
             }
           });

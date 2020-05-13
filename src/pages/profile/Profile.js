@@ -18,10 +18,23 @@ export default class Profile extends React.Component{
         }
         this.newAvatar = null
         this.newPhotoUrl = ''
+        this.lastUser = 'id';
+        this.email = localStorage.getItem(LoginString.EMAIL);
     }
 
     componentDidMount() {
         this.checkLogin()
+    }
+
+    passwordReset =()=> {
+        firebase.auth().sendPasswordResetEmail(this.email).catch(function(error){
+            if(error != null){
+                document.getElementById('1').innerHTML=error;
+            }
+        })
+        document.getElementById('1').innerHTML="Check your email, to change the password";
+        
+        
     }
 
     checkLogin = () => {
@@ -134,8 +147,16 @@ export default class Profile extends React.Component{
                     onChange={this.onChangeNickname}
                 />
 
+                <div>
+                <p id='1' style={{color:'red'}}></p>
+                </div>
+
                 <button className="btnUpdate" onClick={this.uploadAvatar}>
                     UPDATE
+                </button>
+
+                <button className="btnback" onClick={() => {this.passwordReset()}}>
+                Reset your password
                 </button>
 
                 <button className="btnback" onClick={() => this.props.history.goBack()}>

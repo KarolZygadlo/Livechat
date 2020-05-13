@@ -6,19 +6,11 @@
     flex-direction: column;
     width: 100%;
     position: relative;
-    
-    background-color: url("https://i.pinimg.com/474x/2e/2e/25/2e2e25c53d858f4af66151304fdb68b7.jpg");
- 
     backface-visibility: hidden;
-    border-left: 1px solid #ededed;
-    /* border-right: 5px solid #DFA375; */
     max-height: 100vh;
     min-height: 100vh;
-    /* margin-right: 20px; */
     border-radius: 10px;
-    /* box-shadow: 0 5px 5px #808888; */
-   
-  
+
 }
 .viewAvatarItem{
     margin-left: 20px;
@@ -26,26 +18,16 @@
 }
 
 .headerChatBoard {
-    border-bottom: 1px solid #e8e8e8;
     padding: 5px;
     display: flex;
+    background-color: #007bff!important;
     
-    
-    background-color: #ededed;
-    
-}
-.aboutme{
-    padding-top: 20px;
-    margin-left: 80px;
-    
-    align-items: center;
-    display: flex;
-    position: absolute;
 }
 .textHeaderChatBoard {
     font-weight: bold;
-    color: #203152;
-    margin-left: 10px;
+    color: #fff!important;
+    margin-left: 20px;
+    padding-top: 10px;
     
 }
 
@@ -134,8 +116,7 @@ input::placeholder {
 .viewItemRight {
     width: 300px;
     height: auto;
-   
-    background-color: #dcf8c6;
+    background-color: #007bff!important;
     align-self: flex-end;
     margin-right: 20px;
     margin-top: 10px;
@@ -143,7 +124,7 @@ input::placeholder {
     border-top-right-radius: 8px;
     border-bottom-left-radius: 8px;
     border-bottom-right-radius: 0px;
-    color: #203152;
+    color: #fff!important;
     text-align: left;
     padding-left: 20px;
     padding-right: 20px;
@@ -317,7 +298,7 @@ input::placeholder {
 }
 
 .textTimeLeft {
-    color: #808888;
+    color: #000!important;
     font-size: 12px;
     font-style: italic;
     margin-left: 50px;
@@ -332,7 +313,7 @@ input::placeholder {
 }
 
 .textSayHi {
-    color: #808888;
+    color: #000;
     font-size: 14px;
 }
 
