@@ -5,6 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import firebase from '../../services/firebase';
 import images from '../../projectImages/ProjectImages';
 import LoginString from '../login/LoginStrings';
+import { passwordReset } from '../../services/passwordReset';
 
 export default class Profile extends React.Component{
     constructor(props) {
@@ -26,17 +27,6 @@ export default class Profile extends React.Component{
         this.checkLogin()
     }
 
-    passwordReset =()=> {
-        firebase.auth().sendPasswordResetEmail(this.email).catch(function(error){
-            if(error != null){
-                document.getElementById('1').innerHTML=error;
-            }
-        })
-        document.getElementById('1').innerHTML="Check your email, to change the password";
-        
-        
-    }
-
     checkLogin = () => {
         if (!localStorage.getItem(LoginString.ID)) {
             this.props.history.push('/')
@@ -49,7 +39,6 @@ export default class Profile extends React.Component{
 
     onChangeAvatar = event => {
         if (event.target.files && event.target.files[0]) {
-            // Check this file is an image?
             const prefixFiletype = event.target.files[0].type.toString()
             if (prefixFiletype.indexOf(LoginString.PREFIX_IMAGE) !== 0) {
                 this.props.showToast(0, 'This file is not an image')
@@ -155,7 +144,7 @@ export default class Profile extends React.Component{
                     UPDATE
                 </button>
 
-                <button className="btnback" onClick={() => {this.passwordReset()}}>
+                <button className="btnback" onClick={() => {passwordReset(this.email)}}>
                 Reset your password
                 </button>
 

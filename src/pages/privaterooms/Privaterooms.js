@@ -189,12 +189,6 @@ export default class Privaterooms extends React.Component {
         }
     }
 
-    onKeyboardPress = event => {
-        if (event.key === 'Enter') {
-            this.onSendMessage(this.state.inputValue, 0)
-        }
-    }
-
     scrollToBottom = () => {
         if (this.messagesEnd) {
             this.messagesEnd.scrollIntoView({})
@@ -250,7 +244,6 @@ export default class Privaterooms extends React.Component {
                         onChange={event => {
                             this.setState({inputValue: event.target.value})
                         }}
-                        onKeyPress={this.onKeyboardPress}
                     />
                     <img
                         className="icSend"

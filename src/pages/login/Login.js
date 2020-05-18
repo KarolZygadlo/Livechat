@@ -6,6 +6,7 @@ import LoginString from '../login/LoginStrings';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
+import { passwordReset } from '../../services/passwordReset';
 
 export default class Login extends React.Component {
 
@@ -36,17 +37,6 @@ export default class Login extends React.Component {
         }else {
             this.setState({isLoading: false})
         }
-    }
-
-    passwordReset =()=> {
-        firebase.auth().sendPasswordResetEmail(this.state.email).catch(function(error){
-            if(error != null){
-                document.getElementById('1').innerHTML=error;
-            }
-        })
-        document.getElementById('1').innerHTML="Check your email, to change the password";
-        
-        
     }
 
     async handleSubmit(event) {
@@ -95,7 +85,7 @@ export default class Login extends React.Component {
                 Login
             </Button>
             <div className="mt-2">
-            <Button variant="primary" onClick={() => {this.passwordReset()}}>
+            <Button variant="primary" onClick={() => {passwordReset(this.state.email)}}>
                 Password Reset
             </Button>
             </div>
