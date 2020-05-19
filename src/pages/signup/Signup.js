@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import firebase from '../../services/firebase';
 import LoginString from '../login/LoginStrings';
-import md5 from 'md5';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
@@ -67,6 +66,7 @@ export default class SignUp extends Component {
     }
 
     render() {
+        
         return(
 
             <div>
@@ -105,9 +105,7 @@ export default class SignUp extends Component {
             </div>
 
         ) 
-
         
     }
-
 
 }

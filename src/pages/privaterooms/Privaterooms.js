@@ -7,6 +7,7 @@ import images from '../../projectImages/ProjectImages';
 import './Privaterooms.css';
 import LoginString from '../login/LoginStrings';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { deleteMessage } from '../../services/deleteMessage';
 import md5 from 'md5';
 
 
@@ -276,13 +277,13 @@ export default class Privaterooms extends React.Component {
                 if (item.userId === this.currentUserId) {
                     if (item.status === 0 || item.status === 2) {
                         viewListMessage.push(
-                            <div className="viewItemRight" key={item.timestamp} onClick={() => {this.deleteMessage(item.messageId)}}>
+                            <div className="viewItemRight" key={item.timestamp} onClick={() => {deleteMessage('privaterooms',item.messageId, this.privateChatId)}}>
                                 <span className="textContentItem">{item.message}</span>
                             </div>
                         )
                     } else {
                         viewListMessage.push(
-                            <div className="viewItemRight2" key={item.timestamp} onClick={() => {this.deleteMessage(item.messageId)}}>
+                            <div className="viewItemRight2" key={item.timestamp} onClick={() => {deleteMessage('privaterooms',item.messageId, this.privateChatId)}}>
                                 <img
                                     className="imgItemRight"
                                     src={item.message}
@@ -371,29 +372,6 @@ export default class Privaterooms extends React.Component {
         }
     }
 
-    deleteMessage =(id)=> {
-        firebase.firestore()
-            .collection('privaterooms')
-            .doc(this.privateChatId)
-            .collection(this.privateChatId)
-            .where("messageId", "==", id)
-            .get()
-            .then(querySnapshot => {
-                querySnapshot.forEach(doc => {
-                    const docId = doc.id;
-                    firebase.firestore()
-                        .collection('privaterooms')
-                        .doc(this.privateChatId)
-                        .collection(this.privateChatId)
-                        .doc(docId)
-                        .update({
-                            status: 2,
-                            message: "Wiadomość usunięta"
 
-                        });
-
-                });
-            });
-    }
 
 }

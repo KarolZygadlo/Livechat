@@ -8,12 +8,15 @@
   "dependencies": {
     "@material-ui/core": "^4.9.11",
     "@material-ui/icons": "^4.9.1",
-    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/jest-dom": "^5.7.0",
     "@testing-library/react": "^9.4.1",
     "@testing-library/user-event": "^7.2.1",
     "bootstrap": "^4.4.1",
     "electron-is-dev": "^1.2.0",
+    "enzyme": "^3.11.0",
+    "enzyme-adapter-react-16": "^1.15.2",
     "firebase": "^7.14.2",
+    "jest-enzyme": "^7.1.2",
     "jquery": "^3.5.0",
     "md5": "^2.2.1",
     "moment": "^2.25.0",
@@ -55,6 +58,8 @@
     "cross-env": "^7.0.2",
     "electron": "^8.2.5",
     "electron-builder": "^22.6.0",
+    "jest-environment-enzyme": "^7.1.2",
+    "react-test-renderer": "^16.13.1",
     "wait-on": "^5.0.0"
   }
 }

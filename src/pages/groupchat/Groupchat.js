@@ -8,6 +8,7 @@ import './Groupchat.css';
 import LoginString from '../login/LoginStrings';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import md5 from 'md5';
+import { deleteMessage } from '../../services/deleteMessage';
 
 
 export default class Groupchat extends React.Component {
@@ -260,13 +261,13 @@ export default class Groupchat extends React.Component {
                 if (item.userId === this.currentUserId) {
                     if (item.status === 0 || item.status === 2) {
                         viewListMessage.push(
-                            <div className="viewItemRight" key={item.timestamp} onClick={() => {this.deleteMessage(item.messageId)}}>
+                            <div className="viewItemRight" key={item.timestamp} onClick={() => {deleteMessage('groupchat',item.messageId, this.currentPeerGroup)}}>
                                 <span className="textContentItem">{item.message}</span>
                             </div>
                         )
                     } else {
                         viewListMessage.push(
-                            <div className="viewItemRight2" key={item.timestamp} onClick={() => {this.deleteMessage(item.messageId)}}>
+                            <div className="viewItemRight2" key={item.timestamp} onClick={() => {deleteMessage('groupchat', item.messageId, this.currentPeerGroup)}}>
                                 <img
                                     className="imgItemRight"
                                     src={item.message}
@@ -344,44 +345,6 @@ export default class Groupchat extends React.Component {
         } else {
             return false
         }
-    }
-
-    deleteMessage =(messageid)=> {
-        firebase.firestore()
-        .collection('groupchat')
-        .doc(this.currentPeerGroup)
-        .collection(this.currentPeerGroup)
-            .doc(messageid)
-            .update({
-                status: 2,
-                message: "Wiadomość usunięta",
-
-            })
-    }
-
-    deleteMessage =(id)=> {
-        firebase.firestore()
-            .collection('groupchat')
-            .doc(this.currentPeerGroup)
-            .collection(this.currentPeerGroup)
-            .where("messageId", "==", id)
-            .get()
-            .then(querySnapshot => {
-                querySnapshot.forEach(doc => {
-                    const docId = doc.id;
-                    firebase.firestore()
-                        .collection('groupchat')
-                        .doc(this.currentPeerGroup)
-                        .collection(this.currentPeerGroup)
-                        .doc(docId)
-                        .update({
-                            status: 2,
-                            message: "Wiadomość usunięta"
-
-                        });
-
-                });
-            });
     }
 
 }

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import {
     Route,
-    BrowserRouter as Router,
     Switch,
     HashRouter
 } from 'react-router-dom';
@@ -23,8 +22,8 @@ class App extends Component {
                 break;
             case 1:
                 toast.success(message)
+                break;
                 default:
-                    break;    
         }
     }
 

@@ -2,10 +2,10 @@ import React from 'react';
 import LoginString from "../login/LoginStrings";
 import firebase from '../../services/firebase';
 import './Chat.css';
-import ReactDOM from 'react-dom';
 import Privaterooms from '../privaterooms/Privaterooms';
 import Welcome from '../welcome/Welcome';
 import Groupchat from '../groupchat/Groupchat'
+import { checkNotificationsGrant, checkNotifications } from '../../services/notifications';
 
 export default class Chat extends React.Component {
 
@@ -32,36 +32,10 @@ export default class Chat extends React.Component {
     }
 
     componentDidMount () {
-        this.checkNotificationsGrant()
-        this.checkNotifications()
+        checkNotificationsGrant()
+        checkNotifications(this.currentUserId)
         this.checkLogin()
     }
-
-    checkNotifications =() =>{
-        this.listenerNotify = firebase.firestore().collection("notifications")
-        .where('toUserId', '==', this.currentUserId)
-        .onSnapshot(querySnapshot => {
-          let newNotification = [];
-          querySnapshot.forEach(doc => {
-            newNotification.push(doc.data());
-            this.lastUser = localStorage.getItem(LoginString.LASTUSER);
-            if (newNotification[0].fromUserId !=  this.lastUser) {
-            console.log(newNotification[0].fromUserId);
-            console.log(this.lastUser);
-            var notification = new Notification("Nowa wiadomość od "+ newNotification[0].fromUserName);
-            }
-          });
-      });
-    }
-
-    checkNotificationsGrant =() =>{
-        if (Notification.permission !== "denied") {
-            Notification.requestPermission().then(function(permission) { 
-                console.log('udzielono zgody');
-            });
-        }
-    }
-  
 
     checkLogin = () => {
         if (!localStorage.getItem(LoginString.ID)) {

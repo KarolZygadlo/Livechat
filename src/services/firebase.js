@@ -1,6 +1,4 @@
-import React from 'react';
 import * as firebase from 'firebase';
-
 
 var  firebaseConfig = {
   apiKey: 'AIzaSyB3vWU0XV5VuqRBrar-0J8JSAq9cf_kTwo',
@@ -13,8 +11,5 @@ var  firebaseConfig = {
 }
 
 firebase.initializeApp(firebaseConfig)
-firebase.firestore().settings({
-    timestampsInSnapshots: true
-})
 
 export default firebase;

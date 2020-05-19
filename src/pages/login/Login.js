@@ -1,6 +1,5 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import ReactLoading from 'react-loading';
 import firebase from '../../services/firebase';
 import LoginString from '../login/LoginStrings';
 import Form from 'react-bootstrap/Form';
@@ -41,7 +40,6 @@ export default class Login extends React.Component {
 
     async handleSubmit(event) {
         event.preventDefault();
-
         await firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
         .then(async result => {
             let user = result.user;
@@ -73,24 +71,24 @@ export default class Login extends React.Component {
             <div>
             <Container className="mt-5">
             <Form onSubmit={this.handleSubmit}> 
-            <Form.Group controlId="formBasicEmail">
+            <Form.Group id="formEmail" controlId="formBasicEmail">
                 <Form.Label>Email address</Form.Label>
                 <Form.Control name="email" type="email" placeholder="Enter email" onChange={this.handleChange} value={this.state.email} required/>
             </Form.Group>
-            <Form.Group controlId="formBasicPassword">
+            <Form.Group id="formPassword" controlId="formBasicPassword">
                 <Form.Label>Password</Form.Label>
                 <Form.Control name="password" type="password" placeholder="Password" onChange={this.handleChange} value={this.state.password} required/>
             </Form.Group>
-            <Button variant="primary" type="submit">
+            <Button id="buttonLogin" variant="primary" type="submit">
                 Login
             </Button>
             <div className="mt-2">
-            <Button variant="primary" onClick={() => {passwordReset(this.state.email)}}>
+            <Button id="buttonPasswordReset" variant="primary" onClick={() => {passwordReset(this.state.email)}}>
                 Password Reset
             </Button>
             </div>
             <div class="mt-5">
-            <p style={{color: 'grey'}}>Don't have account?</p>
+            <p id="registerInfo" style={{color: 'grey'}}>Dont have account?</p>
                 <Link to="/signup">
                     Sign Up
                 </Link>
@@ -103,14 +101,11 @@ export default class Login extends React.Component {
             <div>
                 <p id='1' style={{color:'red'}}></p>
             </div>
-
             </Form>
             </Container>
-            
             </div>
 
         )  
     }
-
 
 }
