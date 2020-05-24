@@ -6,6 +6,7 @@ import firebase from '../../services/firebase';
 import images from '../../projectImages/ProjectImages';
 import LoginString from '../login/LoginStrings';
 import { passwordReset } from '../../services/passwordReset';
+import { checkNotifications } from '../../services/notifications';
 
 export default class Profile extends React.Component{
     constructor(props) {
@@ -19,18 +20,11 @@ export default class Profile extends React.Component{
         }
         this.newAvatar = null
         this.newPhotoUrl = ''
-        this.lastUser = 'id';
         this.email = localStorage.getItem(LoginString.EMAIL);
     }
 
-    componentDidMount() {
-        this.checkLogin()
-    }
-
-    checkLogin = () => {
-        if (!localStorage.getItem(LoginString.ID)) {
-            this.props.history.push('/')
-        }
+    componentDidMount () {
+        checkNotifications(this.state.id)
     }
 
     onChangeNickname = event => {
@@ -118,6 +112,7 @@ export default class Profile extends React.Component{
                         onClick={() => this.refInput.click()}
                     />
                     <input
+                        id="photoInput"
                         ref={el => {
                             this.refInput = el
                         }}
@@ -130,6 +125,7 @@ export default class Profile extends React.Component{
 
                 <span className="textLabel">Nickname:</span>
                 <input
+                    id="nicknameInput"
                     className="textInput"
                     value={this.state.nickname ? this.state.nickname : ''}
                     placeholder="Your nickname..."
@@ -140,15 +136,15 @@ export default class Profile extends React.Component{
                 <p id='1' style={{color:'red'}}></p>
                 </div>
 
-                <button className="btnUpdate" onClick={this.uploadAvatar}>
+                <button id="buttonUpdate" className="btnUpdate" onClick={this.uploadAvatar}>
                     UPDATE
                 </button>
 
-                <button className="btnback" onClick={() => {passwordReset(this.email)}}>
+                <button id="buttonReset" className="btnback" onClick={() => {passwordReset(this.email)}}>
                 Reset your password
                 </button>
 
-                <button className="btnback" onClick={() => this.props.history.goBack()}>
+                <button id="buttonBack" className="btnback" onClick={() => this.props.history.goBack()}>
                 BACK
                 </button>
 

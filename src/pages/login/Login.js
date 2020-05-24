@@ -89,12 +89,12 @@ export default class Login extends React.Component {
             </div>
             <div class="mt-5">
             <p id="registerInfo" style={{color: 'grey'}}>Dont have account?</p>
-                <Link to="/signup">
+                <Link id="signup" to="/signup">
                     Sign Up
                 </Link>
             </div>
             <div class="">
-                <Link to="/">
+                <Link id="goBack" to="/">
                     Go back
                 </Link>
             </div>   

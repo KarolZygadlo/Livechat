@@ -15,20 +15,15 @@ export default class Chat extends React.Component {
             isLoading: true,
             currentPeerUser: null,
             currentPeerGroup: null,
-            displayedContacts: []
+            search : ""
         }
         this.currentUserName = localStorage.getItem(LoginString.NICKNAME);
         this.currentUserId = localStorage.getItem(LoginString.ID);
         this.currentUserPhoto = localStorage.getItem(LoginString.PHOTO_URL); 
 
-        this.searchUsers = []
         this.allUsers = []
         this.allGroups = ['mems', 'star wars']
 
-        this.onProfileClick = this.onProfileClick.bind(this);
-        this.getListUser = this.getListUser.bind(this);
-        this.renderListUser = this.renderListUser.bind(this);
-        this.renderListGroups = this.renderListGroups.bind(this);
     }
 
     componentDidMount () {
@@ -65,7 +60,7 @@ export default class Chat extends React.Component {
             querySnapshot => {
                 this.allUsers = []
                 querySnapshot.forEach(doc => {
-                         this.allUsers.push(doc.data())
+                    this.allUsers.push(doc.data())
                  })
                  this.setState({isLoading: false})
              },
@@ -73,11 +68,21 @@ export default class Chat extends React.Component {
                  this.props.showToast(0, err.toString())
              }
          )
+         this.renderListUser()
+    }
+
+    searchHandler =(event)=>{
+        this.setState({ search : event.target.value.toLowerCase() });
     }
 
     renderListUser=()=>{
+        if(this.allUsers.length > 0){
             let viewListUser = []
-            this.allUsers.forEach((item)=>{
+            this.allUsers
+                .filter((item)=>{
+                    return item.nickname.toLowerCase().indexOf(this.state.search) >= 0
+                })
+                .map((item)=>{
                 if(item.userId != this.currentUserId) {
                     viewListUser.push(
                             <button
@@ -101,8 +106,13 @@ export default class Chat extends React.Component {
                         </button>
                     ) 
                 }
-            })
+            });
             return viewListUser
+        }
+        else{
+            console.log("No users in list")
+        }
+           
     }
 
     renderListGroups=()=>{
@@ -135,16 +145,6 @@ export default class Chat extends React.Component {
         }else{
             console.log("No groups in list")
         }
-    }
-
-    searchHandler =(event)=>{
-        let searchQuery = event.target.value.toLowerCase(),
-        displayedContacts = this.allUsers.filter((el)=>{
-            let SearchValue = el.nickname.toLowerCase();
-            return SearchValue.indexOf(searchQuery) !== -1;
-        })
-        console.log(displayedContacts)
-        this.displayedContacts = displayedContacts
     }
 
     render() {
@@ -190,9 +190,8 @@ export default class Chat extends React.Component {
                                 />
                             </div>
                         </div>
-                        {this.renderListUser()}
                         {this.renderListGroups()}
-                        
+                        {this.renderListUser()}
                     </div>
                     <div className="viewBoard">
                         {boardView}

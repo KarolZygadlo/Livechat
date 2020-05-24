@@ -29,7 +29,6 @@ export default class Privaterooms extends React.Component {
         this.removeListener= null;
         this.currentPhotoFile = null;
         
-
     }
 
     componentDidUpdate() {
@@ -301,11 +300,6 @@ export default class Privaterooms extends React.Component {
                                         <span className="textContentItem">{item.message}</span>
                                     </div>
                                 </div>
-                                {this.isLastMessageLeft(index) ? (
-                                    <span className="textTimeLeft">
-                                    {item.nickname}   
-                                    </span>
-                                ) : null}
                             </div>
                         )
                     } else {
@@ -320,10 +314,6 @@ export default class Privaterooms extends React.Component {
                                         />
                                     </div>
                                 </div>
-                                {this.isLastMessageLeft(index) ? (
-                                    <span className="textTimeLeft"> {item.nickname}
-                                    </span>
-                                ) : null}
                             </div>
                         )
                     } 

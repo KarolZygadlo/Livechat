@@ -72,14 +72,14 @@ export default class SignUp extends Component {
             <div>
             <Container className="mt-5">
             <Form onSubmit={this.handleSubmit}> 
-            <Form.Group controlId="formBasicEmail">
+            <Form.Group id="formEmail" controlId="formBasicEmail">
                 <Form.Label>Email address</Form.Label>
                 <Form.Control name="email" type="email" placeholder="Enter email" onChange={this.handleChange} value={this.state.email} required/>
                 <Form.Text className="text-muted">
-                We'll never share your email with anyone else.
+                We will never share your email with anyone else.
                 </Form.Text>
             </Form.Group>
-            <Form.Group controlId="formBasicPassword">
+            <Form.Group id="formPassword" controlId="formBasicPassword">
                 <Form.Label>Password</Form.Label>
                 <Form.Control name="password" type="password" placeholder="Password" onChange={this.handleChange} value={this.state.password} required/>
             </Form.Group>
@@ -87,12 +87,12 @@ export default class SignUp extends Component {
                 <Form.Label>Nickname</Form.Label>
                 <Form.Control name="nickname" type="text" placeholder="Nikcname" onChange={this.handleChange} value={this.state.nickname} required/>
             </Form.Group>
-            <Button variant="primary" type="submit">
+            <Button id="buttonSubmit" variant="primary" type="submit">
                 Submit
             </Button>
             <div class="mt-5">
-            <p style={{color: 'grey'}}>Alredy have an account?</p>
-            <Link to="/login">
+            <p id="infoText"style={{color: 'grey'}}>Already have an account?</p>
+            <Link id="loginInfo" to="/login">
                 Go to login page
             </Link>
             </div>

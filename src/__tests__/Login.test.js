@@ -55,7 +55,12 @@ it('button password reset exist', () => {
     expect(button.exists()).toBeTruthy();
 })
 
-it('singup link has text', () => {
+it('register info has text', () => {
     const button = wrapper.find('#registerInfo');
     expect(button.text()).toBe('Dont have account?');
+})
+
+it('signup link has text', () => {
+    const button = wrapper.find('#signup');
+    expect(button.text()).toBe('Sign Up');
 })
