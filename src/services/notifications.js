@@ -14,14 +14,6 @@ export function checkNotifications (userId) {
   
 }
 
-// export function checkNotificationsGrant () {
-//     if (Notification.permission !== "denied") {
-//         Notification.requestPermission().then(function(permission) { 
-//             console.log('udzielono zgody');
-//         });
-//     }
-// }
-
 function deleteNotification (docId) {
   firebase.firestore().collection("notifications").doc(docId).delete().then(function() {
     console.log("Document successfully deleted!");

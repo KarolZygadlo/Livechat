@@ -62,6 +62,7 @@ export default class Groupchat extends React.Component {
          .collection('groupchat')
          .doc(this.currentPeerGroup)
          .collection(this.currentPeerGroup)
+         .orderBy('timestamp')
          .onSnapshot(
             querySnapshot => {
                 this.listMessage = []
@@ -132,7 +133,6 @@ export default class Groupchat extends React.Component {
         if (event.target.files && event.target.files[0]) {
             this.setState({isLoading: true})
             this.currentPhotoFile = event.target.files[0]
-            // Check this file is an image?
             const prefixFiletype = event.target.files[0].type.toString()
             if (prefixFiletype.indexOf(LoginString.PREFIX_IMAGE) === 0) {
                 this.uploadPhoto()
@@ -285,11 +285,9 @@ export default class Groupchat extends React.Component {
                                         <span className="textContentItem">{item.message}</span>
                                     </div>
                                 </div>
-                                {this.isLastMessageLeft(index) ? (
                                     <span className="textTimeLeft">
                                     {item.nickname}   
                                     </span>
-                                ) : null}
                             </div>
                         )
                     } else {
@@ -304,10 +302,8 @@ export default class Groupchat extends React.Component {
                                         />
                                     </div>
                                 </div>
-                                {this.isLastMessageLeft(index) ? (
                                     <span className="textTimeLeft"> {item.nickname}
                                     </span>
-                                ) : null}
                             </div>
                         )
                     } 
@@ -317,33 +313,9 @@ export default class Groupchat extends React.Component {
         } else {
             return (
                 <div className="viewWrapSayHi">
-                    <span className="textSayHi">Say hi to new friend</span>
+                    <span className="textSayHi">Say hi to new friends</span>
                 </div>
             )
-        }
-    }
-
-    isLastMessageLeft(index) {
-        if (
-            (index + 1 < this.listMessage.length &&
-                this.listMessage[index + 1].userId === this.currentUserId) ||
-            index === this.listMessage.length - 1
-        ) {
-            return true
-        } else {
-            return false
-        }
-    }
-
-    isLastMessageRight(index) {
-        if (
-            (index + 1 < this.listMessage.length &&
-                this.listMessage[index + 1].userId !== this.currentUserId) ||
-            index === this.listMessage.length - 1
-        ) {
-            return true
-        } else {
-            return false
         }
     }
 

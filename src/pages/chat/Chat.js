@@ -5,7 +5,7 @@ import './Chat.css';
 import Privaterooms from '../privaterooms/Privaterooms';
 import Welcome from '../welcome/Welcome';
 import Groupchat from '../groupchat/Groupchat'
-import { checkNotificationsGrant, checkNotifications } from '../../services/notifications';
+import { checkNotifications } from '../../services/notifications';
 
 export default class Chat extends React.Component {
 
@@ -22,12 +22,11 @@ export default class Chat extends React.Component {
         this.currentUserPhoto = localStorage.getItem(LoginString.PHOTO_URL); 
 
         this.allUsers = []
-        this.allGroups = ['mems', 'star wars']
+        this.allGroups = ['mems', 'starwars']
 
     }
 
     componentDidMount () {
-        checkNotificationsGrant()
         checkNotifications(this.currentUserId)
         this.checkLogin()
     }

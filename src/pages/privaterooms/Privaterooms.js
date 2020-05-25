@@ -64,12 +64,11 @@ export default class Privaterooms extends React.Component {
         } else {
             this.privateChatId = `${this.currentPeerUser.userId}-${this.currentUserId}`
         }
-        localStorage.setItem(LoginString.LASTUSER, this.currentPeerUser.userId)
-         // Get history and listen new data added
          this.removeListener = firebase.firestore()
          .collection('privaterooms')
          .doc(this.privateChatId)
          .collection(this.privateChatId)
+         .orderBy('timestamp')
          .onSnapshot(
             querySnapshot => {
                 this.listMessage = []
@@ -149,7 +148,6 @@ export default class Privaterooms extends React.Component {
         if (event.target.files && event.target.files[0]) {
             this.setState({isLoading: true})
             this.currentPhotoFile = event.target.files[0]
-            // Check this file is an image?
             const prefixFiletype = event.target.files[0].type.toString()
             if (prefixFiletype.indexOf(LoginString.PREFIX_IMAGE) === 0) {
                 this.uploadPhoto()
@@ -337,31 +335,6 @@ export default class Privaterooms extends React.Component {
         }
         return hash
     }
-
-    isLastMessageLeft(index) {
-        if (
-            (index + 1 < this.listMessage.length &&
-                this.listMessage[index + 1].userId === this.currentUserId) ||
-            index === this.listMessage.length - 1
-        ) {
-            return true
-        } else {
-            return false
-        }
-    }
-
-    isLastMessageRight(index) {
-        if (
-            (index + 1 < this.listMessage.length &&
-                this.listMessage[index + 1].userId !== this.currentUserId) ||
-            index === this.listMessage.length - 1
-        ) {
-            return true
-        } else {
-            return false
-        }
-    }
-
 
 
 }

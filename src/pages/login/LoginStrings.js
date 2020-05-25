@@ -10,6 +10,5 @@ const LoginString = {
     DOC_ADDED: 'added',
     PREFIX_IMAGE: 'image/',
     CurrentUserdocKey:'',
-    LASTUSER: 'id',
     }
 export default LoginString

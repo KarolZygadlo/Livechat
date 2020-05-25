@@ -17,8 +17,8 @@ app.on('activate', function () {
 });
 function createWindow() {
   mainWindow = new BrowserWindow({
-    width: 1024,
-    height: 1024,
+    width: 1280,
+    height: 800,
     title: "Chat desktop app demo"
   });
   mainWindow.loadURL(isDev ? 'http://localhost:3000' : `file://${path.join(__dirname, '../build/index.html')}`);
