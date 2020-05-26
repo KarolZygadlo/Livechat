@@ -4,7 +4,7 @@
 ```
 npm install
 ```
-### Configure Firebase config in main.js
+### Configure Firebase config in services/firestore.js
  
 ### Compiles and hot-reloads for development
 ```
