@@ -7,8 +7,9 @@ import images from '../../projectImages/ProjectImages';
 import './Groupchat.css';
 import LoginString from '../login/LoginStrings';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import md5 from 'md5';
 import { deleteMessage } from '../../services/deleteMessage';
+import { getNow } from '../../services/getNow';
+import { randomUniqId } from '../../services/randomUniqId';
 
 
 export default class Groupchat extends React.Component {
@@ -79,26 +80,6 @@ export default class Groupchat extends React.Component {
         
     }
 
-    randomUniqId =()=>{
-        let uniqId = md5((Math.random().toString(36).substring(2, 8)) + this.currentUserId + firebase.firestore.FieldValue.serverTimestamp());
-        return uniqId;
-    }
-
-    getNow =()=> {
-        const today = new Date();
-        const date =
-          today.getFullYear() +
-          "-" +
-          (today.getMonth() + 1) +
-          "-" +
-          today.getDate();
-        const time =
-          today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-        const dateTime = date + " " + time;
-        this.timestamp = dateTime;
-        return dateTime;
-      }
-
     onSendMessage =(content, type)=>{
 
         if (content.trim() === '') {
@@ -106,7 +87,7 @@ export default class Groupchat extends React.Component {
         }
 
         const itemMessage ={
-            messageId: this.randomUniqId(),
+            messageId: randomUniqId(this.currentUserId),
             userId: this.currentUserId,
             nickname: this.currentUserName,
             message: content.trim(),
@@ -118,7 +99,7 @@ export default class Groupchat extends React.Component {
         .collection('groupchat')
         .doc(this.currentPeerGroup)
         .collection(this.currentPeerGroup)
-        .doc(this.getNow())
+        .doc(getNow())
         .set(itemMessage)
         .then(() => {
             this.setState({inputValue: ''})
@@ -149,7 +130,7 @@ export default class Groupchat extends React.Component {
         if (this.currentPhotoFile) {
 
             const uploadTask = firebase.storage()
-                .ref(`privaterooms/${this.randomUniqId()}_${this.currentPhotoFile['name']}`)
+                .ref(`privaterooms/${randomUniqId(this.currentUserId)}_${this.currentPhotoFile['name']}`)
                 .put(this.currentPhotoFile)
 
             uploadTask.on(
