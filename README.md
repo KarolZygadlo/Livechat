@@ -4,6 +4,7 @@
 ```
 npm install
 ```
+### Configure Firebase config in main.js
  
 ### Compiles and hot-reloads for development
 ```
